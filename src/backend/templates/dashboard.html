@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}"/>
+    <style>
+        .wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+            width: calc(100% - 40px);
+            max-width: 1200px;
+            margin: 0 auto;
+            height: auto;
+            background-size: cover;
+            overflow: hidden;
+            border: 2px solid #ffffff; /* Border putih */
+            border-radius: 15px; /* Radius untuk rounded corners */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Tambahan shadow */
+        }
+        .card {
+            display: grid;
+            grid-template-columns: 300px;
+            grid-template-rows: 210px 250px 20px;
+            grid-template-areas: "image" "text" "stats";
+            border-radius: 18px;
+            background: #1d1d1d;
+            color: white;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
+            font-family: roboto;
+            text-align: justify;
+            cursor: pointer;
+            margin: 30px;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+        .rgb::after {
+            content: "";
+            background: linear-gradient(45deg,
+                #ff0000 0%,
+                #ff9a00 10%,
+                #d0de21 20%,
+                #4fdc4a 30%,
+                #3fdad8 40%,
+                #2fc9e2 50%,
+                #1c7fee 60%,
+                #5f15f2 70%,
+                #ba0cf8 80%,
+                #fb07d9 90%,
+                #ff0000 100%)
+                repeat 0% 0% / 300% 100%;
+            position: absolute;
+            inset: -3px;
+            border-radius: 16px;
+            filter: blur(8px);
+            transform: translateZ(-1px); /*or z-index */
+            animation: rgb 6s linear infinite;
+        }
+        @keyframes rgb {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .js-tilt-glare {
+            border-radius: 18px;
+        }
+        .card-image {
+            grid-area: image;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            background-size: cover;
+        }
+        .card-text {
+            grid-area: text;
+            margin: 25px;
+            transform: translateZ(30px);
+        }
+        .card-text .date {
+            color: rgb(255, 7, 110);
+            font-size: 13px;
+        }
+        .card-text p {
+            color: grey;
+            font-size: 14px;
+            font-weight: 300;
+        }
+        .card-text h2 {
+            margin-top: 0px;
+            font-size: 28px;
+        }
+        .card-text a {
+            color: rgb(0, 189, 63);
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .card-stats {
+            grid-area: stats;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            background: rgb(255, 7, 110);
+        }
+        .card-stats .stat {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+        .card-stats .border {
+            border-left: 1px solid rgb(172, 26, 87);
+            border-right: 1px solid rgb(172, 26, 87);
+        }
+        .card-stats .value {
+            font-size: 22px;
+            font-weight: 500;
+        }
+        .card-stats .value sup {
+            font-size: 12px;
+        }
+        .card-stats .type {
+            font-size: 11px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+        body {
+            font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer-container {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+
+        @media (max-width: 768px) {
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .blob-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-text {
+                font-size: 1.2rem;
+            }
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .blob-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+    <title>ElectQ</title>
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600 transition duration-300" id="body">
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                <a href="" aria-label="Home">
+                    <img src="{{url_for('static',filename='assets/logo.png')}}" height="auto" width="100" alt="Logo" />
+                </a>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" id="main-menu" aria-label="Main menu" aria-haspopup="true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+            <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+        </div>
+        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+            <span class="inline-flex mr-4">
+                <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+            </span>
+            <span class="inline-flex mr-4">
+                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+            </span>
+            <span class="inline-flex mr-4">
+                <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+            </span>
+        </div>
+    </nav>
+
+    <!--History-->
+        <!-- Rekomendasi Produk Berdasarkan Histori -->
+    <div class="mt-8 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-white to-blue-50 py-8">
+        <!-- Judul -->
+        <h2 class="text-3xl font-bold mb-6 text-blue-800">History</h2>
+        
+        <!-- Card Container -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="border border-gray-300 rounded-lg p-6 hover:shadow-2xl hover:scale-105 transform transition duration-300 bg-white">
+                <img src="{{url_for('static',filename='assets/card1.jpg')}}" alt="Product Image 1" class="w-full h-48 object-contain rounded-md mb-4">
+                <h3 class="text-xl font-semibold text-blue-700">MSI Gaming GeForce GTX 1650</h3>
+                <p class="text-gray-600 mt-2">$141.24</p>
+                <a href="https://www.amazon.com/MSI-GTX-1650-Ventus-OCV3/dp/B0CK9SRJWW/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-blue-600 font-medium hover:text-blue-800 focus:text-blue-900 underline">BUY LINK</a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="border border-gray-300 rounded-lg p-6 hover:shadow-2xl hover:scale-105 transform transition duration-300 bg-white">
+                <img src="{{url_for('static',filename='assets/card2.jpg')}}" alt="Product Image 2" class="w-full h-48 object-contain rounded-md mb-4">
+                <h3 class="text-xl font-semibold text-blue-700">SAMSUNG 32-Inch Odyssey G55C Series</h3>
+                <p class="text-gray-600 mt-2">$279.99</p>
+                <a href="https://www.amazon.com/Samsung-32-Inch-Odyssey-FreeSync-LS32CG550ENXZA/dp/B0CRGJC5ZD/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-blue-600 font-medium hover:text-blue-800 focus:text-blue-900 underline">BUY LINK</a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="border border-gray-300 rounded-lg p-6 hover:shadow-2xl hover:scale-105 transform transition duration-300 bg-white">
+                <img src="{{url_for('static',filename='assets/card3.jpg')}}" alt="Product Image 3" class="w-full h-48 object-contain rounded-md mb-4">
+                <h3 class="text-xl font-semibold text-blue-700">NZXT Kraken 240</h3>
+                <p class="text-gray-600 mt-2">$119.85</p>
+                <a href="https://www.amazon.com/NZXT-Kraken-240-%25E2%2580%258ERL-KN240-B1-High-Performance/dp/B0BY3HNXMS/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-blue-600 font-medium hover:text-blue-800 focus:text-blue-900 underline">BUY LINK</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+<div class="container mx-auto mt-10 mb-10 p-4" data-aos="fade-up">
+    <h2 class="text-3xl font-bold text-center mb-6 text-white" >Choose Your Component</h2>
+    <div class="wrap" style="background-image: url('{{ url_for('static', filename='assets/background.jpg') }}');">
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/cpu.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Central Processing Unit</span>
+                    <h2>CPU</h2>
+                    <p>The CPU (Central Processing Unit) is the main component of a computer that performs calculations, executes instructions, and manages data flow, acting as the system's "brain."</p>
+                    <a href="{{ url_for('cpu_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/cooler.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">CPU Coolers</span>
+                    <h2>Cooler</h2>
+                    <p>CPU coolers are devices that help dissipate heat from the CPU to prevent overheating and ensure optimal performance.</p>
+                    <a href="{{ url_for('coolers_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/gpu.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Graphics Processing Unit</span>
+                    <h2>GPU</h2>
+                    <p>GPU (Graphics Processing Unit) is a processor that accelerates image and video rendering, crucial for gaming and graphics tasks.</p>
+                    <a href="{{ url_for('gpu_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/ssd.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Storage for your data</span>
+                    <h2>Internal Hard Drive</h2>
+                    <p>An internal hard drive is a storage device inside a computer that stores data using spinning disks (HDD) or flash memory (SSD).</p>
+                    <a href="{{ url_for('ssd_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/keyboard.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Input device</span>
+                    <h2>Keyboard</h2>
+                    <p>A keyboard is an input device that uses a set of keys or buttons to allow users to enter text.</p>
+                    <a href="{{ url_for('keyboard_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/ram.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Random Access Memory</span>
+                    <h2>RAM</h2>
+                    <p>RAM (Random Access Memory) is temporary memory that stores data for active applications, allowing quick access and enhancing performance.</p>
+                    <a href="{{ url_for('memory_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/headphones.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Audio output device</span>
+                    <h2>Headphones</h2>
+                    <p>Headphones are audio devices worn over or in the ears that allow users to listen to sound from a computer, smartphone, or other audio sources privately.</p>
+                    <a href="{{ url_for('headphones_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/monitor.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Display Output</span>
+                    <h2>Monitor</h2>
+                    <p>A monitor is an output device that displays visual information from a computer, allowing users to view graphics, text, and videos.</p>
+                    <a href="{{ url_for('monitor_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/motherboard.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Main Circuit Board</span>
+                    <h2>Motherboard</h2>
+                    <p>A motherboard is the main circuit board of a computer that connects and allows communication between the CPU, RAM, storage devices, and other peripherals.</p>
+                    <a href="{{ url_for('motherboard_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/mouse.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Pointing Devicen</span>
+                    <h2>Mouse</h2>
+                    <p>A mouse is a pointing device that lets users control a cursor and execute commands on a computer.</p>
+                    <a href="{{ url_for('mouse_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/psu.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">Provides Power</span>
+                    <h2>Power Supply</h2>
+                    <p>A PSU (Power Supply Unit) converts outlet power into usable power for a computer's components.</p>
+                    <a href="{{ url_for('psu_list') }}">Go To Page</a>
+                </div>
+            </div>
+            <div class="card rgb">
+                <div class="card-image">
+                    <img src="{{url_for('static',filename='assets/robot.jpg')}}" alt="Image 1" style="width: 100%; height: 100%; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+                </div>
+                <div class="card-text">
+                    <span class="date">ElectQ chatbot</span>
+                    <h2>Chatbot</h2>
+                    <p>ElectQ chatbot that helps users choose the type of PC based on their budget.</p>
+                    <a href="{{ url_for('input') }}">Go To Page</a>
+                </div>
+            </div>
+        </div>
+</div>
+
+    <!-- Footer section with dynamic background image -->
+    <footer class="footer-container" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+            <div class="buttons-container">
+                <button class="blob-btn">
+                    <a href="/about" class="button-link">About Us</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="/sharing" class="button-link">Sharing</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. All rights reserved.
+            </div>
+        </div>
+        <!-- Gooey Filter for Blob Button -->
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script src="{{url_for('static',filename='js/aos.js')}}"></script>
+    <script>
+        AOS.init(); // Initialize AOS
+        VanillaTilt.init(document.querySelectorAll(".card"), {
+        glare: true,
+        reverse: true,
+        "max-glare": 0.3,
+        scale: 1.05,
+        max: 25,
+        });
+    </script>
+</body>
+</html>

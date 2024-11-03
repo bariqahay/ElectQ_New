@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}"/>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+        }
+        /* Tambahkan style z-index untuk modal */
+        #locationModal {
+            z-index: 9999; /* Pastikan modal di atas elemen lainnya */
+        }
+
+        .neon-text {
+            text-shadow: 
+                0 0 5px #fff,   /* Cahaya lembut di sekeliling */
+                0 0 10px #fff,  /* Cahaya lebih cerah */
+                0 0 20px #fff, 
+                0 0 40px #0fa,  /* Warna tambahan biru muda */
+                0 0 80px #0fa,  /* Warna lebih cerah */
+                0 0 100px #0fa; /* Efek neon paling terang */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+
+        main {
+            width: min(1200px, 90vw);
+            margin: auto;
+        }
+        section {
+            padding: 2rem 0;
+        }
+        .slider {
+            width: 100%;
+            height: var(--height);
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+            margin-top: 20px;
+        }
+        .slider .list {
+            display: flex;
+            width: 100%;
+            min-width: calc(var(--width) * var(--quantity));
+            position: relative;
+        }
+        .slider .list .item {
+            width: var(--width);
+            height: var(--height);
+            position: absolute;
+            left: 100%;
+            animation: autoRun 10s linear infinite;
+            transition: filter 0.5s;
+            animation-delay: calc((10s / var(--quantity)) * (var(--position) - 1) - 10s)!important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Untuk memastikan gambar dan judul di atas */
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box; /* Menyertakan padding dalam ukuran item */
+        }
+        .slider .list .item img {
+            width: 100%;
+            height: 150px; /* Tinggi seragam */
+            object-fit: cover; /* Crop gambar secara proporsional */
+            border-radius: 8px;
+        }
+        .slider .list .item h2 {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            width: calc(var(--width) - 20px);
+            text-align: center;
+            margin: 10px 0; 
+        }
+        .slider .list .item h2 .title-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .slider .list .item h2 .title-link:hover {
+            color: #ffeb3b;
+        }
+
+        /* Menjamin paragraf seragam */
+        .slider .list .item p {
+            margin: 10px 0 0;
+            padding: 5px 10px;
+            text-align: center;
+            min-height: 80px; /* Menjamin semua paragraf memiliki tinggi minimum */
+            overflow: hidden; /* Menghindari teks overflow */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5; /* Batas jumlah baris */
+            -webkit-box-orient: vertical;
+            flex-grow: 1;
+        }
+
+        @keyframes autoRun {
+            from {
+                left: 100%;
+            }
+            to {
+                left: calc(var(--width) * -1);
+            }
+        }
+        .slider:hover .item {
+            animation-play-state: paused!important;
+            filter: grayscale(1);
+        }
+        .slider .item:hover {
+            filter: grayscale(0);
+        }
+        .slider[reverse="true"] .item {
+            animation: reversePlay 10s linear infinite;
+        }
+        @keyframes reversePlay {
+            from {
+                left: calc(var(--width) * -1);
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .slider {
+                --width: 200px;
+                --height: 340px;
+            }
+            .slider .list .item h2 {
+                font-size: 1rem;
+                padding: 4px;
+            }
+            .slider .list .item p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider {
+                --width: 170px;
+                --height: 300px;
+            }
+            .slider .list .item h2 {
+                font-size: 0.95rem;
+            }
+            .slider .list .item p {
+                font-size: 0.85rem;
+            }
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .blob-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slider {
+                --width: 140px;
+                --height: 270px;
+            }
+            .slider .list .item h2 {
+                font-size: 0.85rem;
+            }
+            .slider .list .item p {
+                font-size: 0.8rem;
+            }
+            .footer-text {
+                font-size: 1.2rem;
+            }
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .blob-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+
+    </style>
+    <title>ElectQ</title>
+
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                <a href="" aria-label="Home">
+                    <img src="{{url_for('static',filename='assets/logo.png')}}" height="auto" width="100" alt="Logo" />
+                </a>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" id="main-menu" aria-label="Main menu" aria-haspopup="true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Try Now</a>
+            <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+        </div>
+        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+            {% if session.get('user_id') or session.get('state') %}
+            <!-- Tampilkan tombol Logout jika user sudah login -->
+                <span class="inline-flex mr-4">
+                    <a href="{{ url_for('logout') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="{{ url_for('user_list') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+                </span>
+            {% else %}
+            <!-- Tampilkan tombol Login dan Sign Up jika user belum login -->
+                <span class="inline-flex mr-4">
+                    <a href="{{ url_for('logins') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Login</a>
+                </span>
+                <span class="inline-flex pr-4">
+                    <a href="{{ url_for('sign') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Get started</a>
+                </span>
+        {% endif %}
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero-section relative w-full h-screen" data-aos="fade-up" data-aos-anchor-placement="top-center">
+        <div class="hero-background relative w-full h-full">
+            <spline-viewer 
+                url="https://prod.spline.design/iF57k3HbCDIyzsdU/scene.splinecode" 
+                class="absolute inset-0 w-full h-full object-cover"
+            ></spline-viewer>
+        </div>
+        <div class="content absolute inset-0 flex items-center justify-center z-10"> 
+            <!-- Konten tengah -->
+            <div class="text-content text-center px-4 md:px-8"> <!-- Nambahin padding di sini -->
+                <h2 class="hero-heading font-poppins text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+                    Elect<span class="text-yellow-500">Q</span>: Your Ultimate PC Guide
+                </h2>
+                <div class="bg-black/50 p-4 rounded-lg inline-block">
+                    <p class="hero-paragraph font-poppins text-sm md:text-base lg:text-lg text-white">
+                        Find the perfect PC tailored to your needs with ElectQ. Simply input your preferences, and our advanced search engine will deliver personalized recommendations for your PC build. Make smarter choices with quick, accurate, and relevant suggestions!
+                    </p>
+                </div>
+                <!-- Tombol di bawah teks -->
+                <div class="mt-8">
+                    <a href="{{ url_for('dashboard') }}" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out">
+                        Try Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-900" data-aos="zoom-in-down" data-aos-anchor-placement="top-center">
+        <div class="container px-5 py-24 mx-auto">
+            <div class="flex flex-col">
+                <div class="h-1 bg-gray-800 rounded overflow-hidden">
+                    <div class="w-24 h-full bg-indigo-500"></div>
+                </div>
+                <div class="flex flex-wrap sm:flex-row flex-col py-6 mb-12">
+                    <h1 class="sm:w-2/5 text-white font-medium title-font text-2xl mb-2 sm:mb-0">BEST PC BUILD</h1>
+                    <p class="sm:w-3/5 leading-relaxed text-base sm:pl-10 pl-0 text-white neon-text">
+                        Building a PC is like crafting your own masterpiece—each part tells a story, and when it all comes together, it’s pure satisfaction.
+                    </p>
+                </div>
+                <div>
+                    <main>
+                        <!-- Horizontal Infinite Scroll Card Here -->
+                        <div class="slider" reverse="true" style="
+                            --width: 220px;
+                            --height: 370px;
+                            --quantity: 6;
+                        ">
+                            <div class="list text-white" data-aos="fade-up" data-aos-anchor-placement="center-center">
+                                <div class="item" style="--position: 1">
+                                    <img src="{{url_for('static',filename='assets/alo.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">Shooting Stars</a>
+                                    </h2>
+                                    <p>The "Shooting Stars" PC build offers outstanding performance for gamers and creators.</p>
+                                </div>
+                                <div class="item" style="--position: 2">
+                                    <img src="{{url_for('static',filename='assets/pc1.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">The Catalyzer</a>
+                                    </h2>
+                                    <p>The "Catalyzer" PC build is designed for productivity and efficiency in the office environment.</p>
+                                </div>
+                                <div class="item" style="--position: 3">
+                                    <img src="{{url_for('static',filename='assets/pc3.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">The "400 Blows"</a>
+                                    </h2>
+                                    <p>The "400 Blows" PC build is engineered for video editing enthusiasts.</p>
+                                </div>
+                                <div class="item" style="--position: 4">
+                                    <img src="{{url_for('static',filename='assets/pc4.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">Eclypse</a>
+                                    </h2>
+                                    <p>The "Eclypse" PC build ensuring a smooth experience with the latest titles.</p>
+                                </div>
+                                <div class="item" style="--position: 5">
+                                    <img src="{{url_for('static',filename='assets/pc2.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">Creativo</a>
+                                    </h2>
+                                    <p>The "Creativo" PC build offering powerful specs for video editing and graphic design.</p>
+                                </div>
+                                <div class="item" style="--position: 6">
+                                    <img src="{{url_for('static',filename='assets/pc6.jpg')}}" alt="">
+                                    <h2 class="text-xl font-medium title-font text-black mt-5">
+                                        <a href="/page1" class="title-link">Prodaktiv</a>
+                                    </h2>
+                                    <p>The "Prodaktiv" PC build is designed for everyday office tasks, providing efficiency.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    <!-- Testimonial Section -->
+    <section class="min-w-screen min-h-screen flex items-center justify-center py-5" data-aos="fade-up" data-aos-anchor-placement="top-center">
+        <div class="w-full px-5 py-16 md:py-24 text-gray-800">
+            <div class="w-full max-w-6xl mx-auto">
+                <div class="text-center max-w-xl mx-auto">
+                    <h1 class="text-6xl md:text-7xl font-bold mb-5 text-white" data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-sine" data-aos-duration="600">User <br>Thoughts.</h1>
+                    <h3 class="text-xl mb-5 font-light text-white">They Said.</h3>
+                    <div class="text-center mb-10">
+                        <span class="inline-block w-1 h-1 rounded-full bg-indigo-500 ml-1"></span>
+                        <span class="inline-block w-3 h-1 rounded-full bg-indigo-500 ml-1"></span>
+                        <span class="inline-block w-40 h-1 rounded-full bg-indigo-500"></span>
+                        <span class="inline-block w-3 h-1 rounded-full bg-indigo-500 ml-1"></span>
+                        <span class="inline-block w-1 h-1 rounded-full bg-indigo-500 ml-1"></span>
+                    </div>
+                </div>
+                <div class="-mx-3 md:flex items-start">
+                    <div class="px-3 md:w-1/2">
+                        <!-- Testimonial 1 -->
+                        <div class="w-full mx-auto rounded-lg bg-gray-900 p-5 text-white font-light mb-6">
+                            <div class="w-full flex mb-4 items-center">
+                                <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
+                                    <img src="https://i.pravatar.cc/100?img=1" alt="">
+                                </div>
+                                <div class="flex-grow pl-3">
+                                    <h6 class="font-bold text-sm uppercase text-white">Kenzie Edgar.</h6>
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <p class="text-sm leading-tight"><span class="text-lg leading-none italic font-bold text-gray-400 mr-1">"</span>"I was blown away by how intuitive this AI-powered recommendation website is! I needed a laptop for work, and the AI nailed my requirements perfectly, recommending a solid mid-range option that fit both my needs and budget. The interface is smooth, and the suggestions feel personalized, which sets this platform apart from others. Highly recommend it for anyone unsure about what PC to buy!"<span class="text-lg leading-none italic font-bold text-gray-400 ml-1">"</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3 md:w-1/2">
+                        <!-- Testimonial 2 -->
+                        <div class="w-full mx-auto rounded-lg bg-gray-900 p-5 text-white font-light mb-6">
+                            <div class="w-full flex mb-4 items-center">
+                                <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
+                                    <img src="https://i.pravatar.cc/100?img=2" alt="">
+                                </div>
+                                <div class="flex-grow pl-3">
+                                    <h6 class="font-bold text-sm uppercase text-white">Stevie Tifft.</h6>
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <p class="text-sm leading-tight"><span class="text-lg leading-none italic font-bold text-gray-400 mr-1">"</span>"I’ve always been into building PCs but often felt overwhelmed by all the choices out there. This site made everything so much easier. The AI not only helped me pick parts within my budget but also suggested accessories like a monitor and mouse, which were perfect fits for gaming. It’s like having a personal PC-building assistant. Definitely a must-try for builders, whether you're a beginner or experienced."<span class="text-lg leading-none italic font-bold text-gray-400 ml-1">"</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial Centered -->
+                <div class="mt-10 text-center">
+                    <div class="w-full mx-auto rounded-lg bg-gray-900 p-5 text-white font-light mb-6 inline-block">
+                        <div class="w-full flex mb-4 items-center justify-center">
+                            <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
+                                <img src="https://i.pravatar.cc/100?img=3" alt="">
+                            </div>
+                            <div class="flex-grow pl-3">
+                                <h6 class="font-bold text-sm uppercase text-white">Tommie Ewart.</h6>
+                            </div>
+                        </div>
+                        <div class="w-full">
+                            <p class="text-sm leading-tight"><span class="text-lg leading-none italic font-bold text-gray-400 mr-1">"</span>"Finding the right tech can be super time-consuming, but this AI recommendation website made it so fast and easy! I was looking for a laptop for video editing, and the AI instantly gave me several options that fit my workflow and budget. I loved how it understood my specific needs without me having to spend hours researching. It’s a real time-saver, especially for those who aren’t tech-savvy!<span class="text-lg leading-none italic font-bold text-gray-400 ml-1">"</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer section with dynamic background image -->
+    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+            <div class="buttons-container">
+                <button class="blob-btn">
+                    <a href="/about" class="button-link">About Us</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="/sharing" class="button-link">Sharing</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. All rights reserved.
+            </div>
+        </div>
+        <!-- Gooey Filter for Blob Button -->
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+    </footer>
+    
+
+        <!-- Modal -->
+    <div id="locationModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Allow Location Access</h2>
+        <p class="mb-4">We use your location to provide better product recommendations.</p>
+        <button id="allowButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Allow</button>
+        <button id="denyButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-4">Deny</button>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.27/build/spline-viewer.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="{{url_for('static',filename='js/aos.js')}}"></script> 
+    <script>
+        AOS.init();
+    </script>
+        <script>
+            window.onload = function() {
+                // Hapus logo dari Spline Viewer
+                var shadowRoot = document.querySelector('spline-viewer').shadowRoot;
+                shadowRoot.querySelector('#logo').remove();
+    
+                // Tampilkan modal
+                var modal = document.getElementById('locationModal');
+                modal.classList.remove('hidden');
+    
+                // Event listener untuk tombol
+                document.getElementById('allowButton').addEventListener('click', function() {
+                    console.log('Location access allowed.');
+                    modal.classList.add('hidden');
+                });
+    
+                document.getElementById('denyButton').addEventListener('click', function() {
+                    console.log('Location access denied.');
+                    modal.classList.add('hidden');
+                });
+            };
+        </script>
+</body>
+</html>

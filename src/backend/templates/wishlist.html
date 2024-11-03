@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/aos.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
+    <title>ElectQ - Wishlist</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    
+        /* Toast Notification Styling */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+    
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+        /* Wishlist Table and Wrapper Styling */
+        .wishlist-wrapper {
+            width: 90%;
+            max-width: 900px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            margin: 20px auto; /* Ubah margin menjadi auto untuk memusatkan */
+            display: flex; /* Pastikan wrapper menggunakan flex */
+            flex-direction: column; /* Menyusun item dalam kolom */
+            align-items: center; /* Memusatkan item secara horizontal */
+        }
+    
+        .wishlist-title {
+            color: #f1f1f1;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .wishlist-table {
+            width: 100%; /* Pastikan tabel menggunakan lebar penuh */
+            border-collapse: collapse;
+            max-width: 800px; /* Anda bisa menyesuaikan lebar maksimum sesuai kebutuhan */
+            margin: 0 auto; /* Memusatkan tabel */
+        }
+    
+        .wishlist-table th,
+        .wishlist-table td {
+            padding: 12px;
+            text-align: left;
+            font-size: 15px;
+            color: #e1e1e1;
+        }
+    
+        .wishlist-table th {
+            background: #222831;
+            font-weight: 600;
+        }
+    
+        .wishlist-table tr {
+            transition: background 0.3s ease;
+        }
+    
+        .wishlist-table tr:hover {
+            background: #393e46;
+        }
+    
+        /* Empty Wishlist Message */
+        #emptyWishlistMessage {
+            color: #bbb;
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 20px;
+            text-align: center;
+        }
+    
+        /* Button Styling */
+        .btn-delete {
+            color: #f44336;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    
+        .btn-delete:hover {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+        <!-- NAVBAR -->
+        <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+            <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+                <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                    <a href="" aria-label="Home">
+                        <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+                    </a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
+                            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex md:space-x-10">
+                <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+                <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+                <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+            </div>
+            <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                <span class="inline-flex mr-4">
+                    <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+            </div>
+        </nav>
+
+        <div class="wishlist-wrapper flex flex-col items-center min-h-screen p-6">
+            <h2 class="wishlist-title">Wishlist</h2>
+            <div class="flex justify-end mt-2 mb-2">
+                <button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-white hover:text-black transition flex items-center">
+                    <i class="fab fa-instagram mr-2"></i> <!-- Ikon Instagram -->
+                    Share to Instagram
+                </button>
+                <button class="bg-yellow-500 text-white px-4 py-2 ml-2 rounded hover:bg-white hover:text-black transition flex items-center">
+                    <i class="fab fa-twitter mr-2"></i> <!-- Ikon Twitter (X) -->
+                    Share to Twitter
+                </button>
+            </div>
+    
+            <div class="w-full bg-gray-900 shadow-md rounded-lg overflow-hidden">
+                <table class="wishlist-table min-w-full bg-gray-900">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wishlistTableBody" class="divide-y divide-gray-200">
+                        <!-- JavaScript will populate wishlist items here -->
+                    </tbody>
+                </table>
+            </div>
+    
+            <!-- Message if Wishlist is Empty -->
+            <p id="emptyWishlistMessage" class="hidden">
+                You don't have a wishlist yet.
+            </p>
+        </div>
+
+    <!-- Footer section with dynamic background image -->
+    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+            <div class="buttons-container">
+                <button class="blob-btn">
+                    <a href="/about" class="button-link">About Us</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="/sharing" class="button-link">Sharing</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. All rights reserved.
+            </div>
+        </div>
+        <!-- Gooey Filter for Blob Button -->
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+    </footer>
+
+    <script>
+        async function loadWishlist() {
+            try {
+                const response = await fetch('/wishlist');
+                const data = await response.json();
+                const tableBody = document.getElementById('wishlistTableBody');
+                const emptyMessage = document.getElementById('emptyWishlistMessage');
+
+                tableBody.innerHTML = '';  // Clear previous data
+
+                if (data.wishlist.length === 0) {
+                    emptyMessage.classList.remove('hidden');  // Show empty message
+                    return;
+                } else {
+                    emptyMessage.classList.add('hidden');  // Hide empty message
+                }
+
+                data.wishlist.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-name', item.name);
+                    row.setAttribute('data-category', item.category);
+
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>$${item.price.toFixed(2)}</td>
+                        <td>${item.category}</td>
+                        <td>
+                            <button onclick="removeFromWishlist('${item.name}', ${item.price}, '${item.category}')" class="btn-delete">
+                                Delete
+                            </button>
+                        </td>
+                        <td>
+                            <a href="https://www.amazon.com/s?k=${encodeURIComponent(item.name)}" target="_blank">
+                                <img src="{{ url_for('static', filename='assets/amazon.jpg') }}" alt="Amazon" class="w-6 h-6 inline">
+                            </a>
+                            <a href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(item.name)}" target="_blank">
+                                <img src="{{ url_for('static', filename='assets/ebay.png') }}" alt="eBay" class="w-6 h-6 inline">
+                            </a>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching wishlist:', error);
+            }
+        }
+
+        async function removeFromWishlist(name, price, category) {
+            try {
+                const response = await fetch(`/wishlist/remove?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&category=${encodeURIComponent(category)}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast(`${name} removed from wishlist!`);
+
+                    const row = document.querySelector(`tr[data-name="${name}"][data-category="${category}"]`);
+                    if (row) row.remove();
+
+                    const tableBody = document.getElementById('wishlistTableBody');
+                    if (!tableBody.children.length) {
+                        document.getElementById('emptyWishlistMessage').classList.remove('hidden');
+                    }
+                } else {
+                    const errorData = await response.json();
+                    showToast(`Failed to remove ${name}: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error('Error removing item from wishlist:', error);
+                showToast('An error occurred. Please try again later.');
+            }
+        }
+
+        function showToast(message) {
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `<p>${message}</p>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadWishlist);
+    </script>
+</body>
+</html>

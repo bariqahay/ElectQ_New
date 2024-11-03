@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>ElectQ - Coolers</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer-container {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+
+        @media (max-width: 768px) {
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .blob-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-text {
+                font-size: 1.2rem;
+            }
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .blob-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+    <!-- NAVBAR -->
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                <a href="" aria-label="Home">
+                    <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+                </a>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
+                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+            <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+        </div>
+        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+            <span class="inline-flex mr-4">
+                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+            </span>
+        </div>
+    </nav>
+
+    <!-- Cooler List Section -->
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold text-white mb-4 text-center">Cooler List</h1>
+        <div id="cooler-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        </div>
+
+        <!-- Pagination controls -->
+        <div class="mt-8 flex justify-between items-center text-white">
+            <button id="prev" class="bg-blue-600 px-4 py-2 rounded disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>
+                Previous
+            </button>
+            <div class="flex items-center space-x-2">
+                <span id="pagination-info"></span>
+                <input type="number" id="page-number" class="px-2 py-1 w-20 text-center text-gray-900 rounded" min="1" placeholder="Page #">
+                <button id="go" class="bg-blue-600 px-4 py-2 rounded">Go</button>
+            </div>
+            <button id="next" class="bg-blue-600 px-4 py-2 rounded disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer section with dynamic background image -->
+    <footer class="footer-container" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+            <div class="buttons-container">
+                <button class="blob-btn">
+                    <a href="/about" class="button-link">About Us</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="/sharing" class="button-link">Sharing</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. All rights reserved.
+            </div>
+        </div>
+        <!-- Gooey Filter for Blob Button -->
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+    </footer>
+
+    <!-- Modal -->
+    <div id="addToCartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-lg font-semibold mb-4">Add To Wishlist</h2>
+            <p id="modal-cooler-name" class="mb-4 text-lg font-medium text-gray-700"></p>
+            <p id="modal-cooler-price" class="mb-4 text-lg font-medium text-gray-700"></p>
+            <button id="add-to-wishlist" class="bg-blue-600 text-white px-4 py-2 rounded">Confirm</button>
+            <button id="close-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded ml-2 hover:bg-gray-400">Cancel</button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-0 right-0 m-4 bg-blue-600 text-white p-3 rounded-lg hidden">
+        <p id="toast-message"></p>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let selectedCooler = null;
+
+        $(document).ready(function() {
+            loadCoolers(currentPage);
+
+            $('#prev').click(function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadCoolers(currentPage);
+                }
+            });
+
+            $('#next').click(function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadCoolers(currentPage);
+                }
+            });
+
+            $('#go').click(function() {
+                const page = parseInt($('#page-number').val());
+                if (page > 0 && page <= totalPages) {
+                    currentPage = page;
+                    loadCoolers(currentPage);
+                }
+            });
+        });
+        
+        async function loadCoolers(page) {
+            $('#loading').removeClass('hidden');
+            try {
+                const response = await fetch(`/api/coolers?page=${page}`);
+                const data = await response.json();
+                const coolerTableBody = $('#cooler-list');
+                coolerTableBody.empty();
+
+                if (data.coolers.length === 0) {
+                    coolerTableBody.append('<p class="text-center text-white col-span-full">No Coolers available</p>');
+                } else {
+                    data.coolers.forEach(cooler => {
+                        const rpmStr = cooler.rpm.join(', ');
+                        const noiseLevelStr = cooler.noise_level.join(', ');
+
+                        coolerTableBody.append(`
+                            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between">
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-800">${cooler.name}</h2>
+                                    <p class="text-lg text-blue-600 font-medium mt-2">$${cooler.price}</p>
+                                    <div class="mt-4 text-sm text-gray-600">
+                                        <p><span class="font-semibold">RPM:</span> ${rpmStr} RPM</p>
+                                        <p><span class="font-semibold">Noise Level:</span> ${noiseLevelStr} dBA</p>
+                                        <p><span class="font-semibold">Color:</span> ${cooler.color || 'N/A'}</p>
+                                        <p><span class="font-semibold">Size:</span> ${cooler.size} mm</p>
+                                    </div>
+                                </div>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded mt-4 add-to-cart-btn"
+                                    data-cooler-name="${cooler.name}"
+                                    data-cooler-price="${cooler.price}">
+                                    Add To Wishlist
+                                </button>
+                            </div>
+                        `);
+                    });
+                }
+
+                $('#pagination-info').text(`Page ${data.page} of ${data.pages}`);
+                totalPages = data.pages;
+
+                $('#prev').prop('disabled', !data.has_prev);
+                $('#next').prop('disabled', !data.has_next);
+
+                document.querySelector('.footer-container').style.display = 'flex';
+        
+                $('.add-to-cart-btn').click(function() {
+                    const coolerName = $(this).data('cooler-name');
+                    const coolerPrice = $(this).data('cooler-price');
+                    selectedCooler = { name: coolerName, price: coolerPrice, category: "cpu" };
+                    $('#modal-cooler-name').text(coolerName);
+                    $('#modal-cooler-price').text(`Price: $${coolerPrice}`);
+                    $('#addToCartModal').removeClass('hidden');
+                });
+
+                $('#close-modal').click(function() {
+                    $('#addToCartModal').addClass('hidden');
+                });
+
+                $('#add-to-wishlist').click(function() {
+                    if (selectedCooler) {
+                        addToWishlist(selectedCooler.name, selectedCooler.price, selectedCooler.category);
+                        $('#addToCartModal').addClass('hidden');
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching CPU data:', error);
+            } finally {
+                $('#loading').addClass('hidden');
+            }
+        }
+
+        async function addToWishlist(name, price, category) {
+            try {
+                const response = await fetch('/wishlist/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, price: price, category: category })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast(`${name} added to wishlist!`);
+                } else if (response.status === 409) {
+                    showToast(`${name} is already in your wishlist.`);
+                } else {
+                    showToast(`Failed to add ${name} to wishlist: ${data.error || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error adding to wishlist:', error);
+                showToast('An error occurred. Please try again later.');
+            }
+        }
+
+        function showToast(message) {
+            $('#toast-message').text(message);
+            $('#toast').removeClass('hidden').fadeIn(400).delay(2000).fadeOut(400);
+        }
+    </script>
+</body>
+</html>
