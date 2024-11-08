@@ -601,6 +601,11 @@ def monitor_list():
 def motherboard_list():
     return render_template('motherboard.html')
 
+@app.route('/sharing')
+@login_required
+def share_list():
+    return render_template('sharing.html')
+
 @app.route('/psu')
 @login_required
 def psu_list():
