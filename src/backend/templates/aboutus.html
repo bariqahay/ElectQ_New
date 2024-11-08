@@ -223,7 +223,7 @@
             <div class="flex flex-col space-y-4 py-4 px-4">
                 <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
                 <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Try Now</a>
-                <a href="/blog" target="_blank" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+                <a href="{{ url_for('share_list') }}" target="_blank" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
                 {% if session.get('user_id') or session.get('state') %}
                     <span class="inline-flex mr-4">
                         <a href="{{ url_for('user_list') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
@@ -242,7 +242,7 @@
         <div class="hidden md:flex md:space-x-10">
             <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
             <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Try Now</a>
-            <a href="/blog" target="_blank" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Blog</a>
+            <a href="/Sharing" target="_blank" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
         </div>
         
         <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
@@ -422,7 +422,7 @@
         <script src="{{url_for('static',filename='js/aos.js')}}"></script> 
         <script>
             AOS.init();
-        </script>
+        </script>
     <script>
         function toggleMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
