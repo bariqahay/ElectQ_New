@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Layanan Kami - ElectQ</title>
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <a href="" aria-label="Home">
+                <img src="{{url_for('static',filename='assets/logo.png')}}" height="auto" width="100" alt="Logo" />
+            </a>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Coba Sekarang</a>
+            <a href="" class="font-medium text-white hover:text-gray-300">Berbagi</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">Tentang Kami</a>
+        </div>
+    </nav>
+
+    <section class="bg-gray-900 py-24" data-aos="fade-up">
+        <div class="container mx-auto text-center">
+            <h2 class="text-5xl font-bold text-white mb-10">Layanan Kami</h2>
+            <p class="text-lg text-gray-400 mb-10">ElectQ hadir untuk memenuhi berbagai kebutuhan PC Anda.</p>
+            <div class="flex flex-wrap justify-center gap-8">
+                <div class="w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
+                    <i class="fas fa-robot text-4xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Layanan Chatbot</h3>
+                    <p>Kami menyediakan layanan chatbot pintar untuk membantu Anda dengan informasi seputar produk dan layanan.</p>
+                </div>
+                <div class="w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
+                    <i class="fas fa-desktop text-4xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Komputer Terakit</h3>
+                    <p>Pilih komputer rakitan terbaik sesuai kebutuhan Anda. Dapatkan rekomendasi lengkap dan terpercaya.</p>
+                </div>
+                <div class="w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
+                    <i class="fas fa-headset text-4xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Chat Admin</h3>
+                    <p>Butuh bantuan? Tim admin kami siap membantu menjawab pertanyaan Anda kapan saja.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">PC Sempurna Anda, Hanya dengan Sekali Klik!</h2>
+            <div class="buttons-container">
+                <a href="/about" class="blob-btn button-link">Tentang Kami</a>
+                <a href="/sharing" class="blob-btn button-link">Berbagi</a>
+                <a href="https://instagram.com" target="_blank" class="blob-btn button-link">Instagram</a>
+                <a href="https://twitter.com" target="_blank" class="blob-btn button-link">Twitter</a>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. Hak Cipta Dilindungi.
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{url_for('static',filename='js/aos.js')}}"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>
