@@ -572,6 +572,11 @@ def logout():
 def cpu_list():
     return render_template('cpu.html')
 
+@app.route('/services')
+@login_required
+def services():
+    return render_template('service.html')
+
 @app.route('/wishlist/view')
 @login_required
 def wishlist():
