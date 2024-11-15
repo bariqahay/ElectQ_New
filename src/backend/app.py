@@ -5,6 +5,7 @@ from gaming import gaming_bp, get_gaming_build
 from office import office_bp, get_office_build
 from editing import editing_bp, get_editing_build
 from dotenv import load_dotenv 
+from flask_login import current_user
 from google_auth_oauthlib.flow import Flow
 import pathlib  # For handling file paths
 import cachecontrol  # For caching session
@@ -631,10 +632,41 @@ def headphones_list():
 def coolers_list():
     return render_template('coolers.html')
 
-@app.route('/user')
+@app.route('/user', methods=['GET', 'POST'])
 @login_required
 def user_list():
-    return render_template('user.html')
+    # Simulate user session data (this should be set when the user logs in)
+    if 'email' not in session:
+        session['email'] = 'user@example.com'
+        session['name'] = ''
+        session['address'] = ''
+        session['city'] = ''
+        session['country'] = ''
+        session['state'] = ''
+        session['zipcode'] = ''
+
+    if request.method == 'POST':
+        # Update editable fields
+        session['address'] = request.form.get('address', session.get('address', ''))
+        session['city'] = request.form.get('city', session.get('city', ''))
+        session['country'] = request.form.get('country', session.get('country', ''))
+        session['state'] = request.form.get('state', session.get('state', ''))
+        session['zipcode'] = request.form.get('zipcode', session.get('zipcode', ''))
+
+        return redirect('/user')
+
+    # Pass session data to the template
+    return render_template(
+        'user.html',
+        email=session.get('email'),
+        username=session.get('name'),
+        address=session.get('address'),
+        city=session.get('city'),
+        country=session.get('country'),
+        state=session.get('state'),
+        zipcode=session.get('zipcode'),
+    )
+
 
 @app.route('/gpu')
 @login_required
