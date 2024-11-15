@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}"/>
+    <style>
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 1rem;
+        }
+
+        /* RGB Text Animation */
+        @keyframes rgbCycle {
+            0% { color: #3b82f6; }
+            33% { color: #9333ea; }
+            66% { color: #fbbf24; }
+            100% { color: #3b82f6; }
+        }
+
+        /* Component Cards Section */
+        .components-section h2 {
+            font-size: 2.5rem;
+            color: #fbbf24;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .component-card {
+            background-color: #28293e;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+        }
+
+        .component-card img {
+            width: 100%;
+            height: auto;
+            max-width: 250px;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .component-card img:hover {
+            transform: scale(1.05);
+        }
+
+        .component-title {
+            font-size: 1.5rem;
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+
+        .component-detail {
+            font-size: 1rem;
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            background: #111827;
+            padding: 2rem;
+            text-align: center;
+            color: #fbbf24;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .components-section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+    <!-- NAVBAR -->
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                <a href="" aria-label="Home">
+                    <img src="{{url_for('static',filename='assets/logo.png')}}" height="auto" width="100" alt="Logo" />
+                </a>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" id="main-menu" aria-label="Main menu" aria-haspopup="true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+            <a href="/sharing" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+        </div>
+        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+            <span class="inline-flex mr-4">
+                <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+            </span>
+            <span class="inline-flex mr-4">
+                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+            </span>
+            <span class="inline-flex mr-4">
+                <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+            </span>
+        </div>
+    </nav>
+
+<section class="components-section py-12" data-aos="fade-up">
+    <div class="container">
+        <h2>Creativo PC Build</h2>
+        <div class="grid-container">
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/AMD_Ryzen_9_7950X.jpg') }}" alt="AMD Ryzen 9 7950X">
+                <h3 class="component-title">AMD Ryzen 9 7950X</h3>
+                <p class="component-detail">
+                    16 Cores | 32 Threads | 4.5 GHz Base Clock | 5.7 GHz Boost Clock | PCIe 5.0 Support | Exceptional for Multi-Core Tasks like Rendering
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/NVIDIA_RTX_4090.jpg') }}" alt="NVIDIA RTX 4090">
+                <h3 class="component-title">NVIDIA RTX 4090</h3>
+                <p class="component-detail">
+                    24 GB GDDR6X | Ray Tracing | DLSS 3 Technology | 16384 CUDA Cores | Outstanding Performance for 8K Video Editing and High-End Design
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/64GB_Corsair_RGB.jpg') }}" alt="64GB Corsair Vengeance DDR5">
+                <h3 class="component-title">64GB Corsair Vengeance DDR5</h3>
+                <p class="component-detail">
+                    DDR5 5600MHz | 32GBx2 | High Bandwidth for Multitasking | Essential for Large Video Projects and 3D Rendering
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/SSD_2TB.jpg') }}" alt="2TB Samsung 990 Pro NVMe SSD">
+                <h3 class="component-title">2TB Samsung 990 Pro NVMe SSD</h3>
+                <p class="component-detail">
+                    PCIe 4.0 | 7450MB/s Read Speed | Fast Workflow and Quick Load Times | Perfect for Storing High-Resolution Files
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/Seagate_Exos_8TB.jpg') }}" alt="8TB Seagate Exos HDD">
+                <h3 class="component-title">8TB Seagate Exos HDD</h3>
+                <p class="component-detail">
+                    7200RPM | Enterprise-Grade Durability | Huge Capacity for Archiving Projects and Backups
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/Corsair_RM1000e.jpg') }}" alt="Corsair RM1000e">
+                <h3 class="component-title">Corsair RM1000e</h3>
+                <p class="component-detail">
+                    1000W Fully Modular PSU | 80+ Gold Certified | Reliable and Efficient Power for High-Performance Components
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/NZXT_Kraken_Z73.jpg') }}" alt="NZXT Kraken Z73">
+                <h3 class="component-title">NZXT Kraken Z73</h3>
+                <p class="component-detail">
+                    360mm AIO Liquid Cooler | Customizable LED Display | Quiet and Efficient Cooling for High-Core Count CPUs
+                </p>
+            </div>
+            <div class="component-card">
+                <img src="{{ url_for('static', filename='assets/Lian_Li_O11D_XL.jpg') }}" alt="Lian Li O11 Dynamic XL">
+                <h3 class="component-title">Lian Li O11 Dynamic XL</h3>
+                <p class="component-detail">
+                    Full-Tower ATX Case | Premium Design | Excellent Airflow | Designed for Advanced Workstation Builds
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; ElectQ 2024. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/aos.js') }}"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>
