@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Companies</title>
+    <style>
+                *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer-container {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+
+        @media (max-width: 768px) {
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .blob-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-text {
+                font-size: 1.2rem;
+            }
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .blob-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 40px 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            width: 280px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .card img {
+            width: 100%;  /* Membuat gambar mengisi lebar card */
+            max-height: 200px; /* Membatasi tinggi gambar menjadi 200px */
+            object-fit: contain; /* Memastikan gambar tetap proporsional tanpa terpotong */
+            border-radius: 8px;
+        }
+        .card h2 {
+            color: #333;
+            font-size: 1.25em;
+            margin: 10px 0;
+        }
+        .card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .card a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .card a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+        <!-- NAVBAR -->
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+            <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                <a href="" aria-label="Home">
+                    <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+                </a>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
+                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+            <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+        </div>
+        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+            <span class="inline-flex mr-4">
+                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+            </span>
+        </div>
+    </nav>
+    <h1>About Companies</h1>
+
+    <div class="container">
+
+        <!-- Intel -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/intel.png') }}" alt="Intel Logo">
+            <h2>Intel</h2>
+            <p>Intel is a global leader in semiconductor manufacturing, known primarily for its CPUs, including the Intel Core, Xeon, and Pentium series. Recently, Intel has expanded into GPUs with the Intel Arc series. The company's processors are found in millions of PCs worldwide, providing robust performance for both casual users and professionals.</p>
+            <a href="https://www.intel.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- AMD -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/AMD.png') }}" alt="AMD Logo">
+            <h2>AMD</h2>
+            <p>AMD is a prominent competitor to Intel, known for its Ryzen series of CPUs and Radeon series of GPUs. AMD is recognized for delivering high-performance solutions at competitive prices, especially in gaming and high-performance computing, making it a favorite among PC enthusiasts.</p>
+            <a href="https://www.amd.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- NVIDIA -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/NVIDIA.png') }}" alt="NVIDIA Logo">
+            <h2>NVIDIA</h2>
+            <p>NVIDIA is a powerhouse in the GPU industry, widely known for its GeForce graphics cards. The company also produces professional-grade GPUs through its Quadro and Tesla series, used in workstations for design, animation, and scientific computing.</p>
+            <a href="https://www.nvidia.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- ASUS -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Asus.png') }}" alt="ASUS Logo">
+            <h2>ASUS</h2>
+            <p>ASUS is one of the largest manufacturers of motherboards, graphic cards, and gaming laptops. Their Republic of Gamers (ROG) series is particularly renowned for premium gaming gear, providing high-end components designed for enthusiasts.</p>
+            <a href="https://www.asus.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- MSI -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/MSI.png') }}" alt="MSI Logo">
+            <h2>MSI</h2>
+            <p>MSI is known for its top-tier gaming motherboards, graphics cards, and laptops. MSI’s products are designed for gaming enthusiasts, with high-quality components and features such as RGB lighting and overclocking support, making them a go-to brand for gamers.</p>
+            <a href="https://www.msi.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Gigabyte -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Gigabyte.png') }}" alt="Gigabyte Logo">
+            <h2>Gigabyte</h2>
+            <p>Gigabyte is a leading manufacturer of motherboards, graphics cards, and gaming PCs. Known for its durable and feature-rich components, Gigabyte offers products designed to provide high performance and reliability, especially in gaming and content creation.</p>
+            <a href="https://www.gigabyte.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- ASRock -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/ASRock.png') }}" alt="ASRock Logo">
+            <h2>ASRock</h2>
+            <p>ASRock produces high-quality motherboards with great performance for both casual users and professionals. Their products are known for stability, affordability, and overclocking potential, with a focus on providing options for a variety of system builds.</p>
+            <a href="https://www.asrock.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- EVGA -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/EVGA.png') }}" alt="EVGA Logo">
+            <h2>EVGA</h2>
+            <p>EVGA is renowned for its high-end graphics cards, power supplies, and motherboards. The brand is especially well-regarded in the gaming and overclocking communities for delivering excellent performance and customer support.</p>
+            <a href="https://www.evga.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Corsair -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Corsair.png') }}" alt="Corsair Logo">
+            <h2>Corsair</h2>
+            <p>Corsair is a leading brand known for its memory modules, SSDs, cooling systems, power supplies, and gaming peripherals. Their products are often favored by gamers and PC builders due to their reliability and cutting-edge technology.</p>
+            <a href="https://www.corsair.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- G.Skill -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/G.skill.png') }}" alt="G.Skill Logo">
+            <h2>G.Skill</h2>
+            <p>G.Skill specializes in high-performance memory and storage solutions, with a strong emphasis on gaming and enthusiast systems. The Trident Z and Ripjaws series are particularly popular among overclockers and gamers.</p>
+            <a href="https://www.gskill.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Kingston -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Kingston.png') }}" alt="Kingston Logo">
+            <h2>Kingston</h2>
+            <p>Kingston is one of the world’s largest independent manufacturers of memory modules and SSDs. Their HyperX series provides high-performance RAM and storage solutions ideal for gaming, content creation, and professional use.</p>
+            <a href="https://www.kingston.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Crucial -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Crucial.png') }}" alt="Crucial Logo">
+            <h2>Crucial</h2>
+            <p>Crucial is known for producing reliable and affordable memory and storage solutions, including DDR4 RAM and SSDs. Their products are widely used in both consumer and enterprise applications due to their consistent performance.</p>
+            <a href="https://www.crucial.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- TeamGroup -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/TeamGroup.png') }}" alt="TeamGroup Logo">
+            <h2>TeamGroup</h2>
+            <p>TeamGroup is a major producer of memory modules, SSDs, and USB drives. They provide reliable storage solutions and high-performance memory designed to meet the needs of gamers and content creators alike.</p>
+            <a href="https://www.teamgroup.com.tw" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Samsung -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Samsung.png') }}" alt="Samsung Logo">
+            <h2>Samsung</h2>
+            <p>Samsung is a global leader in electronics, offering cutting-edge memory solutions like DRAM and NAND flash storage. Their SSDs and RAM modules are known for reliability, speed, and excellent value.</p>
+            <a href="https://www.samsung.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Western Digital (WD) -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/WesternDigital.png') }}" alt="Western Digital Logo">
+            <h2>Western Digital (WD)</h2>
+            <p>Western Digital, a major player in the storage industry, is known for producing HDDs, SSDs, and portable drives. Their products are favored for their high storage capacities and reliability, used in personal and enterprise systems.</p>
+            <a href="https://www.westerndigital.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Seagate -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/Seagate.png') }}" alt="Seagate Logo">
+            <h2>Seagate</h2>
+            <p>Seagate is another giant in the storage industry, producing both HDDs and SSDs. The company’s drives are known for their excellent performance, making them ideal for both everyday and enterprise-level storage solutions.</p>
+            <a href="https://www.seagate.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- NZXT -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/NZXT.png') }}" alt="NZXT Logo">
+            <h2>NZXT</h2>
+            <p>NZXT is best known for producing elegant, high-quality PC cases, coolers, and peripherals. Their cases are often minimalist yet functional, offering great airflow, sleek designs, and space for custom builds.</p>
+            <a href="https://www.nzxt.com" target="_blank">Visit Website</a>
+        </div>
+
+        <!-- Cooler Master -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='assets/CoolerMaster.png') }}" alt="Cooler Master Logo">
+            <h2>Cooler Master</h2>
+            <p>Cooler Master is a leader in cooling solutions, power supplies, and PC cases. Known for its high-performance air and liquid cooling systems, Cooler Master is a favorite for builders looking for both efficiency and design.</p>
+            <a href="https://www.coolermaster.com" target="_blank">Visit Website</a>
+        </div>
+
+            <!-- Footer section with dynamic background image -->
+        <footer class="footer-container" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+            <div class="footer-overlay">
+                <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+                <div class="buttons-container">
+                    <button class="blob-btn">
+                        <a href="/about" class="button-link">About Us</a>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </button>
+                    <button class="blob-btn">
+                        <a href="/sharing" class="button-link">Sharing</a>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </button>
+                    <button class="blob-btn">
+                        <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </button>
+                    <button class="blob-btn">
+                        <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+                <div class="footer-copyright">
+                    © ElectQ 2024. All rights reserved.
+                </div>
+            </div>
+            <!-- Gooey Filter for Blob Button -->
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <defs>
+                    <filter id="goo">
+                        <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                        <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                    </filter>
+                </defs>
+            </svg>
+        </footer>
+    </div>
+</body>
+</html>
