@@ -587,6 +587,11 @@ def wishlist():
 def compare():
     return render_template('compare.html')
 
+@app.route('/prebuilt')
+@login_required
+def prebuilt():
+    return render_template('spek_komputer.html')
+
 @app.route('/test')
 def a_list():
     return render_template('a.html')
