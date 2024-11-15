@@ -6,145 +6,146 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/aos.css') }}" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>Our Services - ElectQ</title>
+    <title>Prebuilt Computers - ElectQ</title>
     <style>
-        .service-container {
-            transition: transform 0.2s, background-color 0.2s;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1e293b;
+            color: #ffffff;
         }
-        .service-container:hover {
-            transform: scale(1.05);
-            background-color: #4b5563; /* Hover background color */
+
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .service-link {
-            text-decoration: none; /* Remove default link underline */
-        }
-    
-        .wrap {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            justify-content: center;
-            padding: 20px;
-            width: calc(100% - 40px);
-            max-width: 1200px;
-            margin: 0 auto;
-            height: auto;
-            background-size: cover;
-            overflow: hidden;
-            border: 2px solid #ffffff; /* Border putih */
-            border-radius: 15px; /* Radius untuk rounded corners */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Tambahan shadow */
-        }
-        .card {
-            display: grid;
-            grid-template-columns: 300px;
-            grid-template-rows: 210px 250px 20px;
-            grid-template-areas: "image" "text" "stats";
-            border-radius: 18px;
-            background: #1d1d1d;
-            color: white;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
-            font-family: roboto;
-            text-align: justify;
-            cursor: pointer;
-            margin: 30px;
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
-        }
-        .rgb::after {
-            content: "";
-            background: linear-gradient(45deg,
-                #ff0000 0%,
-                #ff9a00 10%,
-                #d0de21 20%,
-                #4fdc4a 30%,
-                #3fdad8 40%,
-                #2fc9e2 50%,
-                #1c7fee 60%,
-                #5f15f2 70%,
-                #ba0cf8 80%,
-                #fb07d9 90%,
-                #ff0000 100%)
-                repeat 0% 0% / 300% 100%;
-            position: absolute;
-            inset: -3px;
-            border-radius: 16px;
-            filter: blur(8px);
-            transform: translateZ(-1px); /*or z-index */
-            animation: rgb 6s linear infinite;
-        }
-        @keyframes rgb {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
-        }
-        .js-tilt-glare {
-            border-radius: 18px;
-        }
-        .card-image {
-            grid-area: image;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            background-size: cover;
-        }
-        .card-text {
-            grid-area: text;
-            margin: 25px;
-            transform: translateZ(30px);
-        }
-        .card-text .date {
-            color: rgb(255, 7, 110);
-            font-size: 13px;
-        }
-        .card-text p {
-            color: grey;
-            font-size: 14px;
-            font-weight: 300;
-        }
-        .card-text h2 {
-            margin-top: 0px;
-            font-size: 28px;
-        }
-        .card-text a {
-            color: rgb(0, 189, 63);
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 10px;
-            display: inline-block;
-        }
-        .card-stats {
-            grid-area: stats;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            background: rgb(255, 7, 110);
-        }
-        .card-stats .stat {
-            padding: 10px;
+
+        .navbar-links {
             display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .navbar-links a {
+            color: #ffffff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            color: #fbbf24;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #facc15;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .computer-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #374151;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 15px;
+            text-align: center;
+        }
+
+        .computer-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #475569;
+        }
+
+        .computer-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .computer-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+
+        .computer-specs ul {
+            list-style-type: none;
+            padding: 0;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            text-align: left;
+        }
+
+        .computer-specs ul li {
+            margin-bottom: 5px;
+        }
+
+        .footer-container {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            color: white;
+            overflow: hidden;
+            background-image: url('{{ url_for('static', filename='assets/footer.png') }}');
         }
-        .card-stats .border {
-            border-left: 1px solid rgb(172, 26, 87);
-            border-right: 1px solid rgb(172, 26, 87);
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
         }
-        .card-stats .value {
-            font-size: 22px;
-            font-weight: 500;
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
         }
-        .card-stats .value sup {
-            font-size: 12px;
+
+        .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3;
         }
-        .card-stats .type {
-            font-size: 11px;
-            font-weight: 300;
-            text-transform: uppercase;
+
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .computer-container {
+                width: 90%;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-text {
+                font-size: 1.2rem;
+            }
         }
         body {
             font-family: 'Poppins', sans-serif; /* Apply Poppins font */
@@ -341,47 +342,134 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+<body>
     <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
         <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
             <a href="#" aria-label="Home">
                 <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
             </a>
         </div>
-        <div class="hidden md:flex md:space-x-10">
+        <div class="hidden md:flex md:space-x-10 navbar-links">
             <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
             <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
-            <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Service</a>
+            <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300">Service</a>
             <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
         </div>
     </nav>
 
-    <section class="bg-gray-900 py-24" data-aos="fade-up">
-        <div class="container mx-auto text-center">
-            <h2 class="text-5xl font-bold text-white mb-10">Our Services</h2>
-            <p class="text-lg text-gray-400 mb-10">ElectQ is here to meet all your PC needs.</p>
-            <div class="flex flex-wrap justify-center gap-8">
-                <a href="/trynow" class="service-link">
-                    <div class="service-container w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
-                        <i class="fas fa-robot text-4xl text-yellow-400 mb-4"></i>
-                        <h3 class="text-2xl font-semibold mb-4">Chatbot Service</h3>
-                        <p>We provide a smart chatbot service to assist you with information about products and services.</p>
-                    </div>
-                </a>
-                <a href="{{ url_for('prebuilt') }}" class="service-link">
-                    <div class="service-container w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
-                        <i class="fas fa-desktop text-4xl text-yellow-400 mb-4"></i>
-                        <h3 class="text-2xl font-semibold mb-4">Prebuilt Computers</h3>
-                        <p>Choose the best prebuilt computer to fit your needs. Get complete and reliable recommendations.</p>
-                    </div>
-                </a>
-                <a href="#" class="service-link">
-                    <div class="service-container w-80 p-6 bg-gray-800 text-white rounded-lg text-center">
-                        <i class="fas fa-headset text-4xl text-yellow-400 mb-4"></i>
-                        <h3 class="text-2xl font-semibold mb-4">Admin Chat</h3>
-                        <p>Need assistance? Our admin team is ready to answer your questions anytime.</p>
-                    </div>
-                </a>
+    <section>
+        <h2 class="section-title">Prebuilt Computers</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Gamer Pro X100" class="computer-image">
+                <h3 class="computer-name">Gamer Pro X100</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> Intel i7-12700K</li>
+                        <li><strong>Graphics:</strong> NVIDIA RTX 3080</li>
+                        <li><strong>RAM:</strong> 32GB DDR4</li>
+                        <li><strong>Storage:</strong> 1TB NVMe SSD + 2TB HDD</li>
+                        <li><strong>Cooling:</strong> Liquid Cooling System</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Workstation Z500" class="computer-image">
+                <h3 class="computer-name">Workstation Z500</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> AMD Ryzen 9 5950X</li>
+                        <li><strong>Graphics:</strong> NVIDIA Quadro RTX 4000</li>
+                        <li><strong>RAM:</strong> 64GB DDR4</li>
+                        <li><strong>Storage:</strong> 2TB NVMe SSD</li>
+                        <li><strong>Cooling:</strong> Advanced Air Cooling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Creator Station" class="computer-image">
+                <h3 class="computer-name">Creator Station</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> Intel i9-12900K</li>
+                        <li><strong>Graphics:</strong> NVIDIA RTX 3090</li>
+                        <li><strong>RAM:</strong> 128GB DDR4</li>
+                        <li><strong>Storage:</strong> 4TB NVMe SSD</li>
+                        <li><strong>Cooling:</strong> Dual Liquid Cooling System</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Budget Gaming G200" class="computer-image">
+                <h3 class="computer-name">Budget Gaming G200</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> AMD Ryzen 5 5600X</li>
+                        <li><strong>Graphics:</strong> NVIDIA GTX 1660 Super</li>
+                        <li><strong>RAM:</strong> 16GB DDR4</li>
+                        <li><strong>Storage:</strong> 512GB SSD</li>
+                        <li><strong>Cooling:</strong> Air Cooling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Office Pro O900" class="computer-image">
+                <h3 class="computer-name">Office Pro O900</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> Intel i5-10400</li>
+                        <li><strong>Graphics:</strong> Intel UHD Graphics 730</li>
+                        <li><strong>RAM:</strong> 16GB DDR4</li>
+                        <li><strong>Storage:</strong> 1TB HDD</li>
+                        <li><strong>Cooling:</strong> Silent Air Cooling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Gaming Beast V500" class="computer-image">
+                <h3 class="computer-name">Gaming Beast V500</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> Intel i9-11900K</li>
+                        <li><strong>Graphics:</strong> NVIDIA RTX 3070</li>
+                        <li><strong>RAM:</strong> 32GB DDR4</li>
+                        <li><strong>Storage:</strong> 1TB SSD</li>
+                        <li><strong>Cooling:</strong> Liquid Cooling System</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Professional X200" class="computer-image">
+                <h3 class="computer-name">Professional X200</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> AMD Ryzen 7 5800X</li>
+                        <li><strong>Graphics:</strong> NVIDIA RTX 3060</li>
+                        <li><strong>RAM:</strong> 32GB DDR4</li>
+                        <li><strong>Storage:</strong> 1TB NVMe SSD</li>
+                        <li><strong>Cooling:</strong> Dual Air Cooling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="computer-container">
+                <img src="https://via.placeholder.com/300x200" alt="Design Pro D300" class="computer-image">
+                <h3 class="computer-name">Design Pro D300</h3>
+                <div class="computer-specs">
+                    <ul>
+                        <li><strong>Processor:</strong> Intel i7-10700</li>
+                        <li><strong>Graphics:</strong> AMD Radeon RX 6700 XT</li>
+                        <li><strong>RAM:</strong> 16GB DDR4</li>
+                        <li><strong>Storage:</strong> 512GB SSD + 1TB HDD</li>
+                        <li><strong>Cooling:</strong> Advanced Air Cooling</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -450,10 +538,5 @@
             </defs>
         </svg>
     </footer>
-
-    <script src="{{ url_for('static', filename='js/aos.js') }}"></script>
-    <script>
-        AOS.init();
-    </script>
 </body>
 </html>
