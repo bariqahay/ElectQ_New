@@ -627,6 +627,11 @@ def psu_list():
 def headphones_list():
     return render_template('headphones.html')
 
+@app.route('/prebuilt')
+@login_required
+def prebuilt():
+    return render_template('spek_komputer.html')
+
 @app.route('/coolers')
 @login_required
 def coolers_list():
