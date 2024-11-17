@@ -588,9 +588,9 @@ def wishlist():
 def compare():
     return render_template('compare.html')
 
-@app.route('/prebuilt')
+@app.route('/prebuilts')
 @login_required
-def prebuilt():
+def prebuilts():
     return render_template('spek_komputer.html')
 
 @app.route('/test')
@@ -626,6 +626,11 @@ def psu_list():
 @login_required
 def headphones_list():
     return render_template('headphones.html')
+
+@app.route('/prebuilt')
+@login_required
+def prebuilt():
+    return render_template('spek_komputer.html')
 
 @app.route('/coolers')
 @login_required
