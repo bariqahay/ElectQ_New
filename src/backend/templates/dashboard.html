@@ -536,6 +536,39 @@
         </div>
 </div>
 
+<!-- Menampilkan negara user -->
+<p>Your country: {{ session_country }}</p>
+
+<!-- Debug: Tampilkan valid_countries untuk verifikasi -->
+<p><strong>Valid Countries:</strong> {{ valid_countries }}</p>
+
+<!-- Cek apakah negara user valid -->
+{% if session_country in valid_countries %}
+    <p>Your country is valid. Here are some recommendations for you:</p>
+    
+    <!-- Cek apakah ada rekomendasi -->
+    {% if recommendations %}
+        <ul>
+            {% for item in recommendations %}
+                <li>
+                    <strong>CPU:</strong> {{ item.best_selling_cpu }} <br>
+                    <strong>GPU:</strong> {{ item.best_selling_gpu }} <br>
+                    <strong>RAM:</strong> {{ item.best_selling_ram }} <br>
+                    <strong>SSD:</strong> {{ item.best_selling_ssd }} <br>
+                    <strong>PSU:</strong> {{ item.best_selling_psu }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommendations found for your country.</p>
+    {% endif %}
+{% else %}
+    <p>Your country is not in the valid list.</p>
+{% endif %}
+
+<!-- Debug: Tampilkan recommendations untuk verifikasi -->
+<p><strong>Recommendations Debug:</strong> {{ recommendations }}</p>
+
     <!-- Footer section with dynamic background image -->
     <footer class="footer-container" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
         <div class="footer-overlay">
