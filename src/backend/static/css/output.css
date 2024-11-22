@@ -730,6 +730,10 @@ video {
   margin-right: 1rem;
 }
 
+.ms-auto{
+  margin-inline-start: auto;
+}
+
 .mt-1{
   margin-top: 0.25rem;
 }
@@ -740,6 +744,10 @@ video {
 
 .mt-2{
   margin-top: 0.5rem;
+}
+
+.mt-3{
+  margin-top: 0.75rem;
 }
 
 .mt-4{
@@ -756,6 +764,10 @@ video {
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.ml-auto{
+  margin-left: auto;
 }
 
 .block{
@@ -938,10 +950,6 @@ video {
 
 .animate-spin{
   animation: spin 1s linear infinite;
-}
-
-.resize{
-  resize: both;
 }
 
 .grid-cols-1{
@@ -1473,6 +1481,10 @@ video {
   line-height: 1.25;
 }
 
+.tracking-wide{
+  letter-spacing: 0.025em;
+}
+
 .text-black{
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -1754,6 +1766,11 @@ video {
 .hover\:text-white:hover{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.hover\:text-gray-400:hover{
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 .hover\:shadow-2xl:hover{

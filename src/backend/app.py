@@ -617,6 +617,13 @@ def motherboard_list():
 def share_list():
     return render_template('sharing.html')
 
+
+
+@app.route('/chat_admin')
+@login_required
+def chat_admin():
+    return render_template('chat_admin.html')
+
 @app.route('/psu')
 @login_required
 def psu_list():
