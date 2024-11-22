@@ -14,3 +14,4 @@ __pycache__/
 # Ignore any other temporary files you might want to exclude
 *.log
 *.sqlite3
+node_modules
