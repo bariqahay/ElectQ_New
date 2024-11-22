@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/aos.css') }}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Social & Sharing</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #333;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling with gradient background */
+        nav {
+            background: linear-gradient(to right, #1e3a8a, #7e22ce); /* Blue to Purple gradient */
+            padding: 10px 0;
+            color: #fff;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* Content Styling */
+        .content-container {
+            padding: 50px 20px;
+            background: #333;
+            min-height: 80vh;
+        }
+
+        .post-container {
+            background: #444;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post-container h2 {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .post-container p {
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        .post-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .post-btn {
+            padding: 10px 20px;
+            background-color: #0fa;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-btn:hover {
+            background-color: #055b7f;
+        }
+
+        /* Comment Section */
+        .comments-section {
+            margin-top: 30px;
+            background: #444;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .comments-section h3 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .comment {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .comment img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .comment p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .add-comment {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .add-comment input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #333;
+            color: #fff;
+        }
+
+        .add-comment button {
+            padding: 10px 15px;
+            background-color: #0fa;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .add-comment button:hover {
+            background-color: #055b7f;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+
+    <!-- NAVBAR -->
+    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+
+            <a href="#" aria-label="Home">
+            <a href="{{ url_for('index') }}" aria-label="Home">
+
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+            </a>
+        </div>
+        <div class="hidden md:flex md:space-x-10">
+            <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
+            <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
+            <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Service</a>
+            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content-container">
+        <div class="post-container">
+            <h2>Share Your Thoughts</h2>
+            <p>Post about something you'd like to share with others. Share your insights, opinions, or anything exciting you want the community to know!</p>
+            <div class="post-btn-container">
+                <button class="post-btn">Post Your Share</button>
+            </div>
+        </div>
+
+        <div class="comments-section">
+            <h3>Recent Shares</h3>
+            <!-- Single post example -->
+            <div class="post">
+                <div class="post-header">
+                    <h4>John Doe</h4>
+                    <span class="text-gray-500">5 minutes ago</span>
+                </div>
+                <p>This is a test share about my experience with a new tech gadget!</p>
+                <div class="post-btn-container">
+                    <button class="post-btn">Like</button>
+                    <button class="post-btn">Comment</button>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comment">
+                    <img src="https://i.pravatar.cc/100" alt="User avatar" width="40" height="40">
+                    <p>Great review, I’m considering buying it!</p>
+                </div>
+                <div class="comment">
+                    <img src="https://i.pravatar.cc/100" alt="User avatar" width="40" height="40">
+                    <p>Thanks for the insight, helps a lot!</p>
+                </div>
+                <div class="add-comment">
+                    <input type="text" placeholder="Add a comment...">
+                    <button>Add Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
