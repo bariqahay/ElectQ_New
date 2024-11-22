@@ -152,6 +152,20 @@ class Monitor(db.Model):
     def __repr__(self):
         return f'<Monitor {self.name}>'
 
+class BestSelling(db.Model):
+    __tablename__ = 'best_selling_pc_components'  # Sesuai dengan nama tabel di DB
+
+    id = db.Column(db.Integer, primary_key=True)  # ID sebagai primary key
+    country = db.Column(db.String(50), nullable=False)  # Kolom country
+    best_selling_cpu = db.Column(db.String(100), nullable=False)  # Kolom best_selling_cpu
+    best_selling_gpu = db.Column(db.String(100), nullable=False)  # Kolom best_selling_gpu
+    best_selling_ram = db.Column(db.String(100), nullable=False)  # Kolom best_selling_ram
+    best_selling_ssd = db.Column(db.String(100), nullable=False)  # Kolom best_selling_ssd
+    best_selling_psu = db.Column(db.String(100), nullable=False)  # Kolom best_selling_psu
+
+    def __repr__(self):
+        return f'<BestSelling {self.country}>'
+
 class Motherboard(db.Model):
     __tablename__ = 'motherboard'  # Name of the table in the database
 
