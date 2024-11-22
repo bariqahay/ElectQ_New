@@ -12,14 +12,13 @@ import cachecontrol  # For caching session
 import google.auth.transport.requests  # For Google OAuth requests
 from google.oauth2 import id_token  # For verifying ID tokens
 from requests import Session  # Correct import
-from kategori import CPU, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User
+from kategori import CPU, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User, BestSelling
 from models import db
 from functools import wraps
 import hashlib
 from datetime import datetime,timedelta
 from sqlalchemy.exc import IntegrityError
-import logging
-
+import logging 
 
 load_dotenv()
 
@@ -647,37 +646,57 @@ def coolers_list():
 @app.route('/user', methods=['GET', 'POST'])
 @login_required
 def user_list():
-    # Simulate user session data (this should be set when the user logs in)
-    if 'email' not in session:
-        session['email'] = 'user@example.com'
-        session['name'] = ''
-        session['address'] = ''
-        session['city'] = ''
-        session['country'] = ''
-        session['state'] = ''
-        session['zipcode'] = ''
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    if request.method == 'GET':
+        return render_template(
+            'user.html',
+            email=user.email,
+            username=user.username,
+            address=user.address,
+            city=user.city,
+            country=user.country,
+            state=user.state,
+            zipcode=user.zipcode
+        )
 
     if request.method == 'POST':
-        # Update editable fields
-        session['address'] = request.form.get('address', session.get('address', ''))
-        session['city'] = request.form.get('city', session.get('city', ''))
-        session['country'] = request.form.get('country', session.get('country', ''))
-        session['state'] = request.form.get('state', session.get('state', ''))
-        session['zipcode'] = request.form.get('zipcode', session.get('zipcode', ''))
+        # Validate password
+        action = request.form.get('action')
 
-        return redirect('/user')
+        if action == 'save':
+            # Update user fields
+            user.address = request.form.get('address', user.address)
+            user.city = request.form.get('city', user.city)
+            user.country = request.form.get('country', user.country)
+            user.state = request.form.get('state', user.state)
+            user.zipcode = request.form.get('zipcode', user.zipcode)
 
-    # Pass session data to the template
-    return render_template(
-        'user.html',
-        email=session.get('email'),
-        username=session.get('name'),
-        address=session.get('address'),
-        city=session.get('city'),
-        country=session.get('country'),
-        state=session.get('state'),
-        zipcode=session.get('zipcode'),
-    )
+            try:
+                db.session.commit()
+                return jsonify({'message': 'Profile updated successfully!'}), 200
+            except Exception as e:
+                db.session.rollback()
+                logging.error(f'Error updating profile: {str(e)}')
+                return jsonify({'error': 'Failed to update profile'}), 500
+
+        elif action == 'delete':
+            password = request.form.get('password')
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+            if hashed_password != user.password:
+                return jsonify({'error': 'Incorrect password'}), 400
+            
+            try:
+                db.session.delete(user)
+                db.session.commit()
+                session.pop('user_id', None)
+                return jsonify({'message': 'Account deleted successfully!'}), 200
+            except Exception as e:
+                db.session.rollback()
+                logging.error(f'Error deleting account: {str(e)}')
+                return jsonify({'error': 'Failed to delete account'}), 500
 
 
 @app.route('/gpu')
@@ -707,7 +726,43 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    valid_countries = ['usa', 'canada', 'uk', 'germany', 'japan', 'south korea', 'australia', 'indonesia']
+    user_id = session.get('user_id')  # Ambil ID user dari session
+    user = User.query.get(user_id)   # Ambil data user dari database
+
+    if not user:
+        return redirect('/logins')  # Redirect jika user tidak ditemukan
+
+    # Ambil country dari user dan ubah jadi huruf kecil
+    user_country = user.country.strip().lower() if user.country else None
+
+    # Debug: Log country
+    print(f"User country: {user_country}")
+
+    # Cek apakah user berasal dari negara yang valid
+    if user_country and user_country in valid_countries:
+        # Debug: Log query yang dijalankan
+        print(f"Running query for country: {user_country}")
+        
+        # Ambil data rekomendasi berdasarkan negara
+        recommendations = BestSelling.query.filter_by(country=user_country).all()
+
+        # Debug: Log hasil query
+        if not recommendations:
+            print(f"No recommendations found for country: {user_country}")
+        else:
+            print(f"Recommendations found: {len(recommendations)} items")
+    else:
+        recommendations = None
+        print(f"User country '{user_country}' is not valid or not in the list.")
+
+    # Kirim variabel tambahan untuk debugging
+    return render_template(
+        'dashboard.html',
+        recommendations=recommendations,
+        session_country=user_country,
+        valid_countries=valid_countries
+    )
 
 @app.route('/trynow')
 @login_required
