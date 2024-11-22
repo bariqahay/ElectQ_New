@@ -7,120 +7,244 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <title>User Profile Page</title>
-  <style>
-    /* General styles */
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1e3a8a, #6d28d9);
-      color: #ffffff;
-    }
+    <title>User Profile Page</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding-top: 20px;  /* Padding atas */
+            padding-bottom: 20px;  /* Padding bawah */
+        }
 
-    .container {
-      background: #ffffff;
-      color: #333;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 400px;
-      box-sizing: border-box;
-    }
+        .container {
+            background: #ffffff;
+            color: #333;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+            text-align: center;
+        }
 
-    h3 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #1e3a8a;
-    }
+        h3 {
+            margin-bottom: 20px;
+            color: #1e3a8a;
+        }
 
-    label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 6px;
-      color: #555;
-    }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            text-align: left;
+            color: #555;
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-      box-sizing: border-box;
-      color: #333;
-    }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            color: #333;
+        }
 
-    input:disabled {
-      background: #f4f4f4;
-      color: #888;
-    }
+        input:disabled {
+            background: #f9f9f9;
+            color: #aaa;
+        }
 
-    button {
-      width: 100%;
-      background-color: #1e3a8a;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        input:focus {
+            border-color: #1e3a8a;
+            outline: none;
+        }
 
-    button:hover {
-      background-color: #153768;
-    }
+        button {
+            width: 100%;
+            background-color: #4c6ef5;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
 
-    @media (max-width: 500px) {
-      .container {
-        padding: 15px;
-      }
+        .non-editable {
+            background: #f9f9f9; /* Warna latar belakang lebih terang */
+            color: #aaa; /* Warna teks non-interaktif */
+            pointer-events: none; /* Hilangkan kemampuan klik */
+            cursor: default; /* Ganti kursor ke default (bukan text) */
+            border: 1px solid #ccc; /* Tetap dengan gaya yang konsisten */
+        }
 
-      input {
-        font-size: 12px;
-      }
+        button:hover {
+            background-color: #3657a1;
+        }
 
-      button {
-        font-size: 14px;
-      }
-    }
-  </style>
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-content p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .modal button {
+            background: #4c6ef5;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal button:hover {
+            background: #3657a1;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+
+            input, button {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h3>User Profile</h3>
-    <form method="POST" action="/user">
-      <!-- Non-editable fields -->
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" value="{{ email }}" disabled>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+    <div class="container">
+        <h3>User Profile</h3>
+        <form id="user-form">
+          <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ email }}" readonly class="non-editable">
+            
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ username }}" readonly class="non-editable">
 
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" value="{{ username }}" disabled>
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" value="{{ address }}" disabled>
 
-      <!-- Editable fields -->
-      <label for="address">Address</label>
-      <input type="text" id="address" name="address" value="{{ address }}">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" value="{{ city }}" disabled>
 
-      <label for="city">City</label>
-      <input type="text" id="city" name="city" value="{{ city }}">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" value="{{ country }}" disabled>
 
-      <label for="country">Country</label>
-      <input type="text" id="country" name="country" value="{{ country }}">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" value="{{ state }}" disabled>
 
-      <label for="state">State</label>
-      <input type="text" id="state" name="state" value="{{ state }}">
+            <label for="zipcode">Zipcode</label>
+            <input type="text" id="zipcode" name="zipcode" value="{{ zipcode }}" disabled>
 
-      <label for="zipcode">Zipcode</label>
-      <input type="text" id="zipcode" name="zipcode" value="{{ zipcode }}">
+            <label for="password">Password (required for changes)</label>
+            <input type="password" id="password" name="password">
 
-      <button type="submit">Save Changes</button>
-    </form>
-  </div>
+            <button type="button" id="edit-btn">Edit</button>
+            <button type="button" id="save-btn" disabled>Save Changes</button>
+            <button type="button" id="delete-btn">Delete Account</button>
+        </form>
+    </div>
+
+    <div class="modal" id="notification-modal">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const editBtn = document.getElementById('edit-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const deleteBtn = document.getElementById('delete-btn');
+        const inputs = document.querySelectorAll('input:not([type="password"])');
+        const form = document.getElementById('user-form');
+        const modal = document.getElementById('notification-modal');
+        const modalMessage = document.getElementById('modal-message');
+
+        editBtn.addEventListener('click', () => {
+            // Enable/disable only editable fields
+            inputs.forEach(input => {
+                if (input.id !== 'email' && input.id !== 'username') {
+                    input.disabled = !input.disabled;
+                }
+            });
+            saveBtn.disabled = !saveBtn.disabled;
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const formData = new FormData(form);
+            formData.append('action', 'save');
+            fetch('/user', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                modalMessage.textContent = data.message || data.error;
+                modal.style.display = 'flex';
+                if (data.message) location.reload();
+            });
+        });
+
+        deleteBtn.addEventListener('click', () => {
+            const formData = new FormData(form);
+            formData.append('action', 'delete');
+            fetch('/user', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                modalMessage.textContent = data.message || data.error;
+                modal.style.display = 'flex';
+                if (data.message) window.location.href = '/login';
+            });
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
