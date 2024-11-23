@@ -719,6 +719,36 @@ def keyboard_list():
 def memory_list():
     return render_template('memory.html')
 
+@app.route('/the400blows')
+@login_required
+def theblows():
+    return render_template('the400blows.html')
+
+@app.route('/shootingstars')
+@login_required
+def shootingstars():
+    return render_template('shootingstars.html')
+
+@app.route('/prodaktiv')
+@login_required
+def prodaktiv():
+    return render_template('prodaktiv.html')
+
+@app.route('/eclypse')
+@login_required
+def eclypse():
+    return render_template('eclypse.html')
+
+@app.route('/creativo')
+@login_required
+def creativo():
+    return render_template('creativo.html')
+
+@app.route('/catalyzer')
+@login_required
+def thecatalyzer():
+    return render_template('catalyzer.html')
+
 @app.route('/')
 def index():
     return render_template('index.html')
