@@ -381,10 +381,13 @@
             {% if session.get('user_id') or session.get('state') %}
             <!-- Tampilkan tombol Logout jika user sudah login -->
                 <span class="inline-flex mr-4">
-                    <a href="{{ url_for('logout') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                    <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
                 </span>
                 <span class="inline-flex mr-4">
-                    <a href="{{ url_for('user_list') }}" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+                    <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
                 </span>
             {% else %}
             <!-- Tampilkan tombol Login dan Sign Up jika user belum login -->

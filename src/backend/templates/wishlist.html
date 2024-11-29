@@ -295,13 +295,19 @@
                 </div>
             </div>
             <div class="hidden md:flex md:space-x-10">
-                <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
-                <a href="" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
+                <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Home</a>
+                <a href="/sharing" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
                 <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
             </div>
             <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
                 <span class="inline-flex mr-4">
                     <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
                 </span>
             </div>
         </nav>
