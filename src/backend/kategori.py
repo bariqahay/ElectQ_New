@@ -37,6 +37,23 @@ class CPU(db.Model):
     def __repr__(self):
         return f'<CPU {self.name}>'
     
+class Product(db.Model):
+    __tablename__ = 'products'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(100), nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "category": self.category,
+        }
+
+    
 class Headphones(db.Model):
     __tablename__ = 'headphones'  # Name of the table in the database
 

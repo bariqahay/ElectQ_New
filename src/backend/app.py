@@ -12,7 +12,7 @@ import cachecontrol  # For caching session
 import google.auth.transport.requests  # For Google OAuth requests
 from google.oauth2 import id_token  # For verifying ID tokens
 from requests import Session  # Correct import
-from kategori import CPU, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User, BestSelling
+from kategori import CPU, Product, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User, BestSelling
 from models import db
 from functools import wraps
 import hashlib
@@ -567,6 +567,36 @@ def logout():
     session.pop('user_id', None)  # Remove the user ID from the session
     return redirect('/logins')  # Redirect to the login page or homepage
 
+@app.route('/compare', methods=['GET'])
+def compare():
+    return render_template('compare.html')
+
+
+@app.route('/api/search', methods=['GET'])
+def search_products():
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify({"error": "Query tidak boleh kosong!"}), 400
+
+    results = Product.query.filter(Product.name.ilike(f'%{query}%')).all()
+    return jsonify([product.to_dict() for product in results])
+
+
+@app.route('/api/compare', methods=['POST'])
+def compare_products():
+    data = request.json
+    product1 = Product.query.get(data.get('product1_id'))
+    product2 = Product.query.get(data.get('product2_id'))
+
+    if not product1 or not product2:
+        return jsonify({"error": "Salah satu produk tidak ditemukan!"}), 404
+
+    return jsonify({
+        "product1": product1.to_dict(),
+        "product2": product2.to_dict(),
+    })
+
+
 @app.route('/cpu')
 @login_required
 def cpu_list():
@@ -581,11 +611,6 @@ def services():
 @login_required
 def wishlist():
     return render_template('wishlist.html')
-
-@app.route('/compare')
-@login_required
-def compare():
-    return render_template('compare.html')
 
 @app.route('/prebuilts')
 @login_required
