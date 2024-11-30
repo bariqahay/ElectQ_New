@@ -12,7 +12,7 @@ import cachecontrol  # For caching session
 import google.auth.transport.requests  # For Google OAuth requests
 from google.oauth2 import id_token  # For verifying ID tokens
 from requests import Session  # Correct import
-from kategori import CPU, Product, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User, BestSelling
+from kategori import CPU, Product, Review, CPUCoolers, VideoCard, InternalHardDrive, Keyboard, Memory, Headphones, Monitor, Motherboard, Mouse, PowerSupply, Wishlist, User, BestSelling
 from models import db
 from functools import wraps
 import hashlib
@@ -636,12 +636,65 @@ def monitor_list():
 def motherboard_list():
     return render_template('motherboard.html')
 
-@app.route('/sharing')
-@login_required
-def share_list():
-    return render_template('sharing.html')
+@app.route('/sharing', methods=['GET', 'POST'])
+@login_required  # Pastikan user sudah login
+def sharing():
+    # Cek apakah ada query string untuk pencarian produk
+    search_query = request.args.get('search', '')
 
+    # Jika ada search_query, filter produk berdasarkan nama
+    if search_query:
+        products = Product.query.filter(Product.name.ilike(f'%{search_query}%')).all()
+    else:
+        products = Product.query.all()  # Ambil semua produk kalau nggak ada pencarian
 
+    # Logic untuk penambahan review
+    if request.method == 'POST':
+        product_id = request.form.get('product_id')
+        rating = request.form.get('rating')
+        comment = request.form.get('comment')
+        user_id = session.get('user_id')
+
+        if not all([product_id, rating, comment, user_id]):
+            return jsonify({'error': 'Missing review data'}), 400
+
+        # Create and commit the review
+        new_review = Review(
+            user_id=user_id,
+            product_id=product_id,
+            rating=rating,
+            comment=comment,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
+        return redirect('/sharing')  # Redirect back to the same page
+
+    # Ambil semua review yang ada di tabel review
+    all_reviews = Review.query.all()
+
+    # Buat dictionary yang memetakan product_id ke daftar review
+    reviews = {}
+    for review in all_reviews:
+        if review.product_id not in reviews:
+            reviews[review.product_id] = []
+        reviews[review.product_id].append(review)
+
+    return render_template('sharing.html', products=products, reviews=reviews, search_query=search_query, current_user=current_user)
+
+@app.route('/review/delete/<int:review_id>', methods=['POST'])
+@login_required  # Pastikan hanya user yang sudah login yang bisa mengakses
+def delete_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    if review.user_id == current_user.id:  # Pastikan hanya user yang punya review yang bisa menghapus
+        db.session.delete(review)
+        db.session.commit()
+        flash('Review berhasil dihapus!', 'success')
+    else:
+        flash('Tidak punya hak untuk menghapus review ini.', 'danger')
+    return redirect('/sharing')
 
 @app.route('/chat_admin')
 @login_required

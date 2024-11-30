@@ -7,20 +7,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Sharing</title>
+    <title>Sharing Page</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Footer styling */
-        .footer-container {
+                /* Footer styling */
+                .footer-container {
             position: relative;
             padding: 50px 0;
             text-align: center;
@@ -202,100 +192,117 @@
                 font-size: 12px;
             }
         }
+        
     </style>
 </head>
-
-<body class="bg-gradient-to-r from-blue-700 to-purple-600 min-h-screen flex flex-col">
-
-    <!-- NAVBAR -->
-    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
-        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
-            <div class="flex items-center justify-between w-full md:w-auto pl-4">
-                <a href="{{ url_for('index') }}" aria-label="Home">
-                    <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
-                </a>
-                <div class="-mr-2 flex items-center md:hidden">
-                    <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
-                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600 text-white font-poppins">
+        <!-- NAVBAR -->
+        <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+            <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+                <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                    <a href="" aria-label="Home">
+                        <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+                    </a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
+                            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="hidden md:flex md:space-x-10">
-            <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
-            <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
-            <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Service</a>
-            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
-        </div>
-        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
-            <span class="inline-flex mr-4">
-                <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
-            </span>
-            <span class="inline-flex mr-4">
-                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
-            </span>
-            <span class="inline-flex mr-4">
-                <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
-            </span>
-        </div>
-    </nav>
-
-  <!-- Main Content -->
-  <main class="container mx-auto mt-6 p-4">
-    <!-- Sample Blog Post -->
-    <article class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold mb-2">Intel i9-13900K Review</h2>
-      <p class="text-gray-700 mb-4">High-end CPU for gaming and content creation...</p>
-      
-      <!-- Ratings and Comments -->
-      <div class="space-y-6">
-        <!-- Single Review -->
-        <div class="bg-gray-50 p-4 rounded-lg">
-          <div class="flex items-center mb-2">
-            <!-- User Icon -->
-            <img class="w-10 h-10 rounded-full mr-3" src="https://i.pravatar.cc/100" alt="User avatar">
-            <div>
-              <h3 class="text-lg font-semibold">John Doe</h3>
-              <!-- Rating Stars -->
-              <div class="flex items-center">
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-              </div>
+            <div class="hidden md:flex md:space-x-10 navbar-links">
+                <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
+                <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
+                <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300">Service</a>
+                <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
             </div>
-          </div>
-          <p class="text-gray-600">This CPU’s a beast for gaming and rendering, no cap. But fair warning—it can heat up like a stove! Worth every penny if you’re all about that peak performance grind.</p>
-        </div>
-        <div class="bg-gray-50 p-4 rounded-lg">
-          <div class="flex items-center mb-2">
-            <!-- User Icon -->
-            <img class="w-10 h-10 rounded-full mr-3" src="https://i.pravatar.cc/100" alt="User avatar">
-            <div>
-              <h3 class="text-lg font-semibold">Udin Ganteng</h3>
-              <!-- Rating Stars -->
-              <div class="flex items-center">
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927a1 1 0 011.902 0l1.286 3.973a1 1 0 00.95.691h4.073a1 1 0 01.616 1.789l-3.27 2.37a1 1 0 00-.364 1.118l1.286 3.973a1 1 0 01-1.536 1.118L10 14.347l-3.27 2.37a1 1 0 01-1.536-1.118l1.286-3.973a1 1 0 00-.364-1.118l-3.27-2.37A1 1 0 013.69 7.59h4.073a1 1 0 00.95-.691l1.286-3.973z"/></svg>
-              </div>
+            <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                <span class="inline-flex mr-4">
+                    <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+                </span>
             </div>
-          </div>
-          <p class="text-gray-600">Mantap Pisan Euy.</p>
-        </div>
+        </nav>
 
-        <!-- More reviews bisa tambahin di sini -->
-      </div>
-    </article>
-  </main>
+    <!-- Page Content -->
+    <div class="container mx-auto px-4 py-10">
+        <h1 class="text-3xl font-bold text-center mb-8">Sharing Page</h1>
+    
+        <!-- Submit Review Form -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Submit a Review</h2>
+            <form method="POST" action="/sharing" class="space-y-4 bg-gray-800 p-6 rounded-lg shadow-md">
+                <!-- Product Dropdown -->
+                <div>
+                    <label for="product_id" class="block text-sm font-medium">Product</label>
+                    <select name="product_id" id="product_id" class="mt-1 p-2 w-full bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <!-- Rating -->
+                <div>
+                    <label for="rating" class="block text-sm font-medium">Rating (1-5)</label>
+                    <input type="number" name="rating" id="rating" min="1" max="5"
+                        class="mt-1 p-2 w-full bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+    
+                <!-- Comment -->
+                <div>
+                    <label for="comment" class="block text-sm font-medium">Comment</label>
+                    <textarea name="comment" id="comment" rows="4" placeholder="Write a review..."
+                            class="mt-1 p-2 w-full bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                </div>
+    
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition">Submit Review</button>
+            </form>
+        </section>
+    
+        <!-- Product Reviews -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-4">Product Reviews</h2>
+            <ul class="space-y-8">
+                {% for product in products %}
+                {% if reviews[product.id] %}
+                <li class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">{{ product.name }}</h3>
+                    <p class="text-sm text-gray-400">Price: ${{ product.price }}</p>
+                    <h4 class="mt-4 text-lg font-semibold">Reviews:</h4>
+                    <ul class="mt-2 space-y-4">
+                        {% for review in reviews[product.id] %}
+                        <li class="bg-gray-900 p-4 rounded-lg">
+                            <p><strong>Rating:</strong> {{ review.rating }} / 5</p>
+                            <p><strong>Comment:</strong> {{ review.comment }}</p>
+                            <p><strong>Reviewed by:</strong> {{ review.user.username }}</p>
+                            {% if review.user_id == current_user.id %}
+                            <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" class="mt-2">
+                                <button type="submit" class="text-red-500 hover:text-red-700">Delete Review</button>
+                            </form>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+    
 
     <!-- Footer section with dynamic background image -->
-    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+    <footer class="footer-container" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
         <div class="footer-overlay">
             <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
             <div class="buttons-container">
@@ -360,5 +367,29 @@
         </svg>
     </footer>
 
+    <script>
+        $(document).ready(function() {
+            $('#search-input').on('input', function() {
+                var query = $(this).val();
+                if (query.length > 0) {
+                    $.get('/api/search', { q: query }, function(data) {
+                        $('#product-list').empty();
+                        if (data.length) {
+                            data.forEach(function(product) {
+                                $('#product-list').append('<li>' + product.name + '</li>');
+                            });
+                        } else {
+                            $('#product-list').append('<li>No products found</li>');
+                        }
+                    }).fail(function() {
+                        $('#product-list').empty().append('<li>Error searching products</li>');
+                    });
+                } else {
+                    $('#product-list').empty();
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>
