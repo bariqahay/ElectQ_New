@@ -18,8 +18,12 @@ class User(db.Model):
     state = db.Column(db.String(100), nullable=True)
     zipcode = db.Column(db.String(20), nullable=True)
 
+    # Relasi dengan Review
+    reviews = db.relationship('Review', back_populates='user', lazy=True)
+
     def __repr__(self):
         return f'<User {self.email}>'
+
     
 class CPU(db.Model):
     __tablename__ = 'cpu'  # Nama tabel di database
@@ -53,6 +57,31 @@ class Product(db.Model):
             "category": self.category,
         }
 
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow)
+    updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relasi ke User
+    user = db.relationship('User', back_populates='reviews')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "product_id": self.product_id,
+            "rating": self.rating,
+            "comment": self.comment,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
     
 class Headphones(db.Model):
     __tablename__ = 'headphones'  # Name of the table in the database

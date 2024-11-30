@@ -5,18 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <title>User Input</title>
+    <title>Chatbot</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Animasi typing dots */
-        @keyframes blink {
-            0% { opacity: 0.2; }
-            20% { opacity: 1; }
-            100% { opacity: 0.2; }
+        /* Base styling */
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Title styling */
+        #chat-title {
+            text-align: center; /* Center the text */
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
+            font-weight: 700; /* Bold text */
+            color: white; /* White color */
+            font-size: 1.5rem; /* Adjust font size */
+            margin: 20px 0; /* Add some space around the title */
+        }
+
+        /* Chat container */
+        #chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #chat {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Message styling */
+        .bot-message {
+            align-self: flex-start;
+            background: linear-gradient(135deg, #eaf8ef, #d9f5e5);
+            color: #2c3e50;
+            border-radius: 10px 10px 10px 0;
+            padding: 10px 15px;
+            margin: 8px 0;
+            max-width: 70%;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            align-self: flex-end; /* Tempatkan di kanan */
+            text-align: right; /* Pastikan teks rata kanan */
+            background: linear-gradient(135deg, #eaf4fc, #cdeaff);
+            color: #2c3e50;
+            border-radius: 10px 10px 0 10px;
+            padding: 10px 15px;
+            margin: 8px 0 8px auto; /* Atur margin kiri otomatis agar mentok kanan */
+            max-width: 70%; /* Pastikan elemen tidak terlalu lebar */
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Typing indicator */
+        #typing {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
         }
 
         #typing span {
-            animation: blink 1.4s infinite both;
+            width: 8px;
+            height: 8px;
+            background: #bbb;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
         }
 
         #typing span:nth-child(2) {
@@ -27,367 +96,186 @@
             animation-delay: 0.4s;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
+            }
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* Input bar */
+        #input-bar {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Footer styling */
-        .footer {
-            position: relative;
-            padding: 50px 0;
-            text-align: center;
+        #user-input {
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+
+        #send-button, #clear-button {
+            background: linear-gradient(135deg, #6a5acd, #8a2be2);
             color: #fff;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .footer-overlay {
-            position: relative;
-            z-index: 1;
-            backdrop-filter: brightness(0.5);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .footer-text {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            font-weight: bold;
-            color: #0fa;
-        }
-
-        .buttons-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        /* Blob button styling */
-        .blob-btn {
-            position: relative;
-            padding: 16px 30px;
-            text-align: center;
-            text-transform: uppercase;
-            color: #0505A9; /* Cyan color for text */
-            font-size: 16px;
-            font-weight: bold;
-            background-color: transparent;
-            outline: none;
             border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
             cursor: pointer;
-            border-radius: 30px;
-            transition: color 0.5s;
-            z-index: 1; /* Ensure the button text is above the blob layer */
+            font-weight: bold;
+            transition: transform 0.2s, background 0.3s;
         }
 
-        .blob-btn:before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #0505A9;
-            border-radius: 30px;
+        #send-button:hover, #clear-button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #7b68ee, #9370db);
         }
 
-        .blob-btn:hover {
-            color: #FFFFFF;
+        #send-button:active, #clear-button:active {
+            transform: scale(0.95);
         }
 
-        .blob-btn__inner {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border-radius: 30px;
-            background: #ffffff;
-            z-index: -1; /* Place background below the text */
+        /* Scroll behavior */
+        #chat {
+            scroll-behavior: smooth;
         }
 
-        .blob-btn__blobs {
-            position: relative;
-            display: block;
-            height: 100%;
-            filter: url('#goo');
-        }
-
-        .blob-btn__blob {
-            position: absolute;
-            top: 2px;
-            width: 25%;
-            height: 100%;
-            background: #0505A9;
-            border-radius: 100%;
-            transform: translate3d(0, 150%, 0) scale(1.4);
-            transition: transform 0.45s;
-        }
-
-        .blob-btn:hover .blob-btn__blob {
-            transform: translate3d(0, 0, 0) scale(1.4);
-        }
-
-        /* Apply transitions to each blob with delay */
-        .blob-btn__blob:nth-child(1) {
-            left: 0;
-            transition-delay: 0s;
-        }
-        .blob-btn__blob:nth-child(2) {
-            left: 25%;
-            transition-delay: 0.1s;
-        }
-        .blob-btn__blob:nth-child(3) {
-            left: 50%;
-            transition-delay: 0.2s;
-        }
-        .blob-btn__blob:nth-child(4) {
-            left: 75%;
-            transition-delay: 0.3s;
-        }
-
-        /* Button link styling */
-        .button-link {
-            color: inherit;
-            text-decoration: none;
-            z-index: 2; /* Ensure link text is above the blobs */
-            position: relative; /* Keeps link within button's clickable area */
-        }
-
-        /* Copyright styling */
-        .footer-overlay {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .footer-overlay .footer-text {
-            color: #fff;
-        }
-
-        .footer-overlay .buttons-container {
-            margin: 30px 0;
-        }
-
-        .footer-overlay .buttons {
-            display: flex;
-            flex-direction: row;
-            gap: 15px;
-        }
-
-        .footer-overlay .footer-copyright {
-            position: absolute;
-            left: 20px;
-            bottom: 20px;
+        .notes {
+            background-color: #e0f7fa; /* Light blue */
+            color: #006064; /* Dark blue */
+            padding: 10px 15px;
             font-size: 0.9rem;
-            color: #ffffffb3; /* Slight transparency for text */
+            margin-bottom: 15px;
         }
-    
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-700 to-purple-600 min-h-screen flex flex-col">
-
-    <!-- NAVBAR -->
-    <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
-        <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
-            <div class="flex items-center justify-between w-full md:w-auto pl-4">
-                <a href="{{ url_for('index') }}" aria-label="Home">
-                    <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
-                </a>
-                <div class="-mr-2 flex items-center md:hidden">
-                    <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
-                        <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+        <!-- NAVBAR -->
+        <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+            <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+                <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                    <a href="" aria-label="Home">
+                        <img src="{{ url_for('static', filename='assets/logo.png') }}" height="auto" width="100" alt="Logo" />
+                    </a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button type="button" id="main-menu" aria-label="Main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150 ease-in-out">
+                            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="hidden md:flex md:space-x-10">
-            <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
-            <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
-            <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Service</a>
-            <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
-        </div>
-        <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
-            <span class="inline-flex mr-4">
-                <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
-            </span>
-            <span class="inline-flex mr-4">
-                <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
-            </span>
-            <span class="inline-flex mr-4">
-                <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
-            </span>
-        </div>
-    </nav>
+            <div class="hidden md:flex md:space-x-10 navbar-links">
+                <a href="{{ url_for('dashboard') }}" class="font-medium text-white hover:text-gray-300">Home</a>
+                <a href="/sharing" class="font-medium text-white hover:text-gray-300">Sharing</a>
+                <a href="{{ url_for('services') }}" class="font-medium text-white hover:text-gray-300">Service</a>
+                <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300">About Us</a>
+            </div>
+            <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                <span class="inline-flex mr-4">
+                    <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+                </span>
+            </div>
+        </nav>
+        
+    <!-- Title -->
+    <div id="chat-title">Elect<span class="text-yellow-500">Q</span> Chatbot</div>
 
-    <!-- Main Content -->
-    <div class="flex-grow w-full max-w-md mx-auto mt-10 mb-10">
-        <h1 class="text-2xl font-semibold mb-4 text-white">Chatbot</h1>
-        <div id="chat" class="bg-white p-4 rounded-lg shadow-md max-h-96 overflow-y-auto">
-            <div class="text-left text-gray-700">Bot: Hello, how can I help you?</div>
-        </div>
-
-        <div id="typing" class="hidden mt-2 text-gray-500 italic">
-            Bot is typing<span>.</span><span>.</span><span>.</span>
-        </div>
-
-        <div id="loading-spinner" class="hidden mt-4 flex justify-center">
-            <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-            </svg>
+    <!-- Chat container -->
+    <div id="chat-container">
+            <!-- Notes Section -->
+        <div class="mb-4 p-2 bg-blue-100 text-blue-800">
+            <strong>Note:</strong> Type something like: 
+            <em>"Give me a PC (gaming/editing/office) build with a budget (500-700/700-1000/1000+)$"</em>
         </div>
 
-        <div class="mt-4 flex space-x-2">
-            <input id="user-input" type="text" class="border p-2 rounded w-full" placeholder="Type your message here..." aria-label="User Input" required>
-            <button id="send-button" type="button" class="mt-2 w-full bg-blue-500 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600" aria-label="Send">Send</button>
-            <button id="clear-button" type="button" class="mt-2 bg-red-500 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-600" aria-label="Clear">Clear</button>
+        <div id="chat">
+            <div class="bot-message">Bot: Hello, how can I help you?</div>
+        </div>
+        <div id="typing" class="hidden">
+            <span></span><span></span><span></span>
         </div>
     </div>
 
-    <!-- Footer section with dynamic background image -->
-    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
-        <div class="footer-overlay">
-            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
-            <div class="buttons-container">
-                <button class="blob-btn">
-                    <a href="/about" class="button-link">About Us</a>
-                    <span class="blob-btn__inner">
-                        <span class="blob-btn__blobs">
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                        </span>
-                    </span>
-                </button>
-                <button class="blob-btn">
-                    <a href="/sharing" class="button-link">Sharing</a>
-                    <span class="blob-btn__inner">
-                        <span class="blob-btn__blobs">
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                        </span>
-                    </span>
-                </button>
-                <button class="blob-btn">
-                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
-                    <span class="blob-btn__inner">
-                        <span class="blob-btn__blobs">
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                        </span>
-                    </span>
-                </button>
-                <button class="blob-btn">
-                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
-                    <span class="blob-btn__inner">
-                        <span class="blob-btn__blobs">
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                            <span class="blob-btn__blob"></span>
-                        </span>
-                    </span>
-                </button>
-            </div>
-            <div class="footer-copyright">
-                © ElectQ 2024. All rights reserved.
-            </div>
-        </div>
-        <!-- Gooey Filter for Blob Button -->
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <defs>
-                <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
-                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
-                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
-                </filter>
-            </defs>
-        </svg>
-    </footer>
+    <!-- Input bar -->
+    <div id="input-bar">
+        <input id="user-input" type="text" placeholder="Type your message..." />
+        <button id="send-button">Send</button>
+        <button id="clear-button">Clear</button>
+    </div>
 
     <script>
-        $(document).ready(function() {
-            $('#send-button').click(function() {
+        $(document).ready(function () {
+            const chatContainer = $('#chat');
+
+            function appendMessage(type, message) {
+                const messageClass = type === 'user' ? 'user-message' : 'bot-message';
+                chatContainer.append(`<div class="${messageClass}">${message}</div>`);
+                chatContainer.scrollTop(chatContainer[0].scrollHeight); // Auto-scroll
+            }
+
+            $('#send-button').click(function () {
                 const userInput = $('#user-input').val().trim();
                 if (!userInput) {
-                    alert("Please type a message before sending.");
+                    alert("Please enter a message.");
                     return;
                 }
-    
-                // Append user input
-                $('#chat').append(`<div class="text-right text-blue-600">You: ${userInput}</div>`);
+
+                appendMessage('user', `You: ${userInput}`);
                 $('#user-input').val('');
-                $('#user-input').focus();  // Auto focus the input field
-    
-                $('#loading-spinner').removeClass('hidden');
                 $('#typing').removeClass('hidden');
-    
+
                 $.ajax({
                     type: 'POST',
                     url: '/chat',
                     contentType: 'application/json',
                     data: JSON.stringify({ input: userInput }),
-                    success: function(data) {
-                        $('#loading-spinner').addClass('hidden');
+                    success: function (response) {
                         $('#typing').addClass('hidden');
-    
-                        setTimeout(() => {
-                            if (data.response) {
-                                $('#chat').append(`<div class="text-left text-gray-700">Bot: ${data.response}</div>`);
-                            } else if (data["Build Type"] && data["Total Price"]) {
-                                $('#chat').append(`<div class="text-left text-gray-700">Bot: Build Type: ${data["Build Type"]}, Total Price: $${data["Total Price"]}</div>`);
-    
-                                for (const category in data.Components) {
-                                    const component = data.Components[category];
-                                    $('#chat').append(`<div class="text-left text-gray-700">${category}: ${component.name} - $${component.price.toFixed(2)}</div>`);
-                                }
-                            } else {
-                                $('#chat').append(`<div class="text-left text-gray-700">Bot: Sorry, I couldn't process that request.</div>`);
+
+                        if (response["Build Type"]) {
+                            appendMessage('bot', `Bot: Build Type: ${response["Build Type"]}, Total Price: $${response["Total Price"]}`);
+                            for (const category in response.Components) {
+                                const component = response.Components[category];
+                                appendMessage('bot', `${category}: ${component.name} - $${component.price.toFixed(2)}`);
                             }
-    
-                            $('#chat').scrollTop($('#chat')[0].scrollHeight);
-                        }, 1000);
+                        } else if (response.message) {
+                            appendMessage('bot', `Bot: ${response.message}`);
+                        } else {
+                            appendMessage('bot', "Bot: Sorry, I couldn't understand that.");
+                        }
                     },
-                    error: function() {
-                        $('#loading-spinner').addClass('hidden');
+                    error: function () {
                         $('#typing').addClass('hidden');
-                        $('#chat').append('<div class="text-left text-red-600">Bot: Sorry, I encountered an error!</div>');
+                        appendMessage('bot', "Bot: Sorry, something went wrong.");
                     }
                 });
             });
-    
-            $('#user-input').keypress(function(e) {
-                if (e.which == 13) {
+
+            $('#clear-button').click(function () {
+                chatContainer.empty();
+                appendMessage('bot', "Bot: Hello, how can I help you?");
+                $('#user-input').val('');
+            });
+
+            $('#user-input').keypress(function (e) {
+                if (e.which === 13) {
                     $('#send-button').click();
                 }
-            });
-    
-            $('#clear-button').click(function() {
-                $('#chat').empty();
-                $('#user-input').val('');
-                $('#chat').append('<div class="text-left text-gray-700">Bot: Hello, how can I help you?</div>');
             });
         });
     </script>
