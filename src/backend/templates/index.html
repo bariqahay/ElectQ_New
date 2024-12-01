@@ -400,6 +400,24 @@
         {% endif %}
         </div>
     </nav>
+
+    <div id="mobile-menu" class="hidden bg-gray-900 text-white space-y-2 px-4 py-6 md:hidden">
+        <a href="{{ url_for('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Try Now</a>
+        <a href="/sharing" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Sharing</a>
+        <a href="{{ url_for('services') }}" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Service</a>
+        <a href="{{ url_for('aboutus') }}" class="block px-4 py-2 hover:bg-gray-700 rounded-md">About Us</a>
+        {% if session.get('user_id') or session.get('state') %}
+            <a href="/logout" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Logout</a>
+            <a href="/wishlist/view" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Wishlist</a>
+            <a href="/user" class="block px-4 py-2 hover:bg-gray-700 rounded-md">User Profile</a>
+        {% else %}
+            <a href="{{ url_for('logins') }}" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Login</a>
+            <a href="{{ url_for('sign') }}" class="block px-4 py-2 hover:bg-gray-700 rounded-md">Get started</a>
+        {% endif %}
+    </div>
+    
+
+
     
     <!-- Hero Section -->
     <section class="hero-section relative w-full h-screen" data-aos="fade-up" data-aos-anchor-placement="top-center">
@@ -578,7 +596,7 @@
             <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
             <div class="buttons-container">
                 <button class="blob-btn">
-                    <a href="/aboutus" class="button-link">About Us</a>
+                    <a href="/about" class="button-link">About Us</a>
                     <span class="blob-btn__inner">
                         <span class="blob-btn__blobs">
                             <span class="blob-btn__blob"></span>
@@ -677,5 +695,15 @@
                 });
             };
         </script>
+        <script>
+            const menuButton = document.getElementById('main-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+        
+            menuButton.addEventListener('click', () => {
+                // Toggle class hidden buat munculin/nyembunyiin menu
+                mobileMenu.classList.toggle('hidden');
+            });
+        </script>
+        
 </body>
 </html>
