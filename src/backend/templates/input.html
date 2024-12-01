@@ -9,6 +9,348 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* Base styling */
+        /* Tambahkan style z-index untuk modal */
+        #locationModal {
+            z-index: 9999; /* Pastikan modal di atas elemen lainnya */
+        }
+
+        .neon-text {
+            text-shadow: 
+                0 0 5px #fff,   /* Cahaya lembut di sekeliling */
+                0 0 10px #fff,  /* Cahaya lebih cerah */
+                0 0 20px #fff, 
+                0 0 40px #0fa,  /* Warna tambahan biru muda */
+                0 0 80px #0fa,  /* Warna lebih cerah */
+                0 0 100px #0fa; /* Efek neon paling terang */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Footer styling */
+        .footer {
+            position: relative;
+            padding: 50px 0;
+            text-align: center;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .footer-overlay {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: brightness(0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #0fa;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Blob button styling */
+        .blob-btn {
+            position: relative;
+            padding: 16px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0505A9; /* Cyan color for text */
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.5s;
+            z-index: 1; /* Ensure the button text is above the blob layer */
+        }
+
+        .blob-btn:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0505A9;
+            border-radius: 30px;
+        }
+
+        .blob-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .blob-btn__inner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            z-index: -1; /* Place background below the text */
+        }
+
+        .blob-btn__blobs {
+            position: relative;
+            display: block;
+            height: 100%;
+            filter: url('#goo');
+        }
+
+        .blob-btn__blob {
+            position: absolute;
+            top: 2px;
+            width: 25%;
+            height: 100%;
+            background: #0505A9;
+            border-radius: 100%;
+            transform: translate3d(0, 150%, 0) scale(1.4);
+            transition: transform 0.45s;
+        }
+
+        .blob-btn:hover .blob-btn__blob {
+            transform: translate3d(0, 0, 0) scale(1.4);
+        }
+
+        /* Apply transitions to each blob with delay */
+        .blob-btn__blob:nth-child(1) {
+            left: 0;
+            transition-delay: 0s;
+        }
+        .blob-btn__blob:nth-child(2) {
+            left: 25%;
+            transition-delay: 0.1s;
+        }
+        .blob-btn__blob:nth-child(3) {
+            left: 50%;
+            transition-delay: 0.2s;
+        }
+        .blob-btn__blob:nth-child(4) {
+            left: 75%;
+            transition-delay: 0.3s;
+        }
+
+        /* Button link styling */
+        .button-link {
+            color: inherit;
+            text-decoration: none;
+            z-index: 2; /* Ensure link text is above the blobs */
+            position: relative; /* Keeps link within button's clickable area */
+        }
+
+        /* Copyright styling */
+        .footer-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-overlay .footer-text {
+            color: #fff;
+        }
+
+        .footer-overlay .buttons-container {
+            margin: 30px 0;
+        }
+
+        .footer-overlay .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .footer-overlay .footer-copyright {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #ffffffb3; /* Slight transparency for text */
+        }
+
+        main {
+            width: min(1200px, 90vw);
+            margin: auto;
+        }
+        section {
+            padding: 2rem 0;
+        }
+        .slider {
+            width: 100%;
+            height: var(--height);
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+            margin-top: 20px;
+        }
+        .slider .list {
+            display: flex;
+            width: 100%;
+            min-width: calc(var(--width) * var(--quantity));
+            position: relative;
+        }
+        .slider .list .item {
+            width: var(--width);
+            height: var(--height);
+            position: absolute;
+            left: 100%;
+            animation: autoRun 10s linear infinite;
+            transition: filter 0.5s;
+            animation-delay: calc((10s / var(--quantity)) * (var(--position) - 1) - 10s)!important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Untuk memastikan gambar dan judul di atas */
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box; /* Menyertakan padding dalam ukuran item */
+        }
+        .slider .list .item img {
+            width: 100%;
+            height: 150px; /* Tinggi seragam */
+            object-fit: cover; /* Crop gambar secara proporsional */
+            border-radius: 8px;
+        }
+        .slider .list .item h2 {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            width: calc(var(--width) - 20px);
+            text-align: center;
+            margin: 10px 0; 
+        }
+        .slider .list .item h2 .title-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .slider .list .item h2 .title-link:hover {
+            color: #ffeb3b;
+        }
+
+        /* Menjamin paragraf seragam */
+        .slider .list .item p {
+            margin: 10px 0 0;
+            padding: 5px 10px;
+            text-align: center;
+            min-height: 80px; /* Menjamin semua paragraf memiliki tinggi minimum */
+            overflow: hidden; /* Menghindari teks overflow */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5; /* Batas jumlah baris */
+            -webkit-box-orient: vertical;
+            flex-grow: 1;
+        }
+
+        @keyframes autoRun {
+            from {
+                left: 100%;
+            }
+            to {
+                left: calc(var(--width) * -1);
+            }
+        }
+        .slider:hover .item {
+            animation-play-state: paused!important;
+            filter: grayscale(1);
+        }
+        .slider .item:hover {
+            filter: grayscale(0);
+        }
+        .slider[reverse="true"] .item {
+            animation: reversePlay 10s linear infinite;
+        }
+        @keyframes reversePlay {
+            from {
+                left: calc(var(--width) * -1);
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .slider {
+                --width: 200px;
+                --height: 340px;
+            }
+            .slider .list .item h2 {
+                font-size: 1rem;
+                padding: 4px;
+            }
+            .slider .list .item p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider {
+                --width: 170px;
+                --height: 300px;
+            }
+            .slider .list .item h2 {
+                font-size: 0.95rem;
+            }
+            .slider .list .item p {
+                font-size: 0.85rem;
+            }
+            .footer-text {
+                font-size: 1.5rem;
+            }
+            .blob-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slider {
+                --width: 140px;
+                --height: 270px;
+            }
+            .slider .list .item h2 {
+                font-size: 0.85rem;
+            }
+            .slider .list .item p {
+                font-size: 0.8rem;
+            }
+            .footer-text {
+                font-size: 1.2rem;
+            }
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .blob-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
         
         body {
             font-family: 'Poppins', sans-serif;
@@ -156,7 +498,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-700 to-purple-600">
+<body class="bg-gradient-to-r from-blue-700 to-purple-600" style="scroll-behavior: smooth;height: auto;">
         <!-- NAVBAR -->
         <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
             <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
@@ -196,7 +538,7 @@
     <div id="chat-title">Elect<span class="text-yellow-500">Q</span> Chatbot</div>
 
     <!-- Chat container -->
-    <div id="chat-container">
+    <div id="chat-container" style="height: 475px;overflow-y: scroll;scrollbar-width: none; -ms-overflow-style: none; ">
             <!-- Notes Section -->
         <div class="mb-4 p-2 bg-blue-100 text-blue-800">
             <strong>Note:</strong> Type something like: 
@@ -217,7 +559,70 @@
         <button id="send-button">Send</button>
         <button id="clear-button">Clear</button>
     </div>
-
+    <footer class="footer" style="background-image: url('{{ url_for('static', filename='assets/footer.png') }}');">
+        <div class="footer-overlay">
+            <h2 class="footer-text">Your Perfect PC, Just a Click Away!</h2>
+            <div class="buttons-container">
+                <button class="blob-btn">
+                    <a href="/aboutus" class="button-link">About Us</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="/sharing" class="button-link">Sharing</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://instagram.com" target="_blank" class="button-link">Instagram</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+                <button class="blob-btn">
+                    <a href="https://twitter.com" target="_blank" class="button-link">Twitter</a>
+                    <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                            <span class="blob-btn__blob"></span>
+                        </span>
+                    </span>
+                </button>
+            </div>
+            <div class="footer-copyright">
+                © ElectQ 2024. All rights reserved.
+            </div>
+        </div>
+        <!-- Gooey Filter for Blob Button -->
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                </filter>
+            </defs>
+        </svg>
+    </footer>
     <script>
         $(document).ready(function () {
             const chatContainer = $('#chat');
