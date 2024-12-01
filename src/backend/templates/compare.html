@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bandingkan Produk</title>
+    <title>Compare Product</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aos.css')}}" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}"/>
+    <style>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -66,6 +69,11 @@
             display: flex;
             gap: 20px;
             margin-top: 20px;
+        }
+
+        h1 {
+        font-size: 50px; 
+        font-weight: bold;
         }
 
         .comparison-box {
@@ -361,20 +369,53 @@
         }
     </style>
 </head>
-<body>
+
+    <body class="bg-gradient-to-r from-blue-700 to-purple-600">
+        <!-- NAVBAR -->
+        <nav class="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2 bg-transparent z-10">
+            <div class="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+                <div class="flex items-center justify-between w-full md:w-auto pl-4">
+                    <a href="" aria-label="Home">
+                        <img src="{{url_for('static',filename='assets/logo.png')}}" height="auto" width="100" alt="Logo" />
+                    </a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button type="button" id="main-menu" aria-label="Main menu" aria-haspopup="true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex md:space-x-10">
+                <a href="{{ url_for('index') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">HOME</a>
+                <a href="/sharing" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">Sharing</a>
+                <a href="{{ url_for('aboutus') }}" class="font-medium text-white hover:text-gray-300 transition duration-150 ease-in-out">About Us</a>
+            </div>
+            <div class="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                <span class="inline-flex mr-4">
+                    <a href="/logout" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Logout</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/wishlist/view" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">Wishlist</a>
+                </span>
+                <span class="inline-flex mr-4">
+                    <a href="/user" class="relative inline-flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-base leading-6 rounded-lg transition duration-150 ease-in-out hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">User Profile</a>
+                </span>
+            </div>
+        </nav>
+        
     <div class="container">
         <h1 class="text-white">Compare Product</h1>
         
         <!-- Search bar untuk produk 1 -->
         <div class="search-container">
-            <label for="product1-search">Produk 1:</label>
+            <label for="product1-search">Product 1:</label>
             <input id="product1-search" class="search-box" type="text" placeholder="Cari Produk 1">
             <div class="results-container" id="product1-results"></div>
         </div>
 
         <!-- Search bar untuk produk 2 -->
         <div class="search-container">
-            <label for="product2-search">Produk 2:</label>
+            <label for="product2-search">Product 2:</label>
             <input id="product2-search" class="search-box" type="text" placeholder="Cari Produk 2">
             <div class="results-container" id="product2-results"></div>
         </div>
@@ -386,16 +427,16 @@
         <!-- Hasil perbandingan -->
         <div class="comparison-result mb-10">
             <div class="comparison-box" id="product1-details">
-                <h3>Produk 1</h3>
-                <p><strong>Nama:</strong> -</p>
-                <p><strong>Harga:</strong> -</p>
-                <p><strong>Kategori:</strong> -</p>
+                <h3>Product 1</h3>
+                <p><strong>Name:</strong> -</p>
+                <p><strong>Price:</strong> -</p>
+                <p><strong>Category:</strong> -</p>
             </div>
             <div class="comparison-box" id="product2-details">
-                <h3>Produk 2</h3>
-                <p><strong>Nama:</strong> -</p>
-                <p><strong>Harga:</strong> -</p>
-                <p><strong>Kategori:</strong> -</p>
+                <h3>Product 2</h3>
+                <p><strong>Name:</strong> -</p>
+                <p><strong>Price:</strong> -</p>
+                <p><strong>Category:</strong> -</p>
             </div>
         </div>
     </div>
