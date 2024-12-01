@@ -418,6 +418,14 @@
         </div>
     </nav>
 
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-900 text-white space-y-2 px-4 py-6">
+        <a href="{{ url_for('dashboard') }}" class="block px-4 py-2  hover:bg-gray-700">Home</a>
+        <a href="/sharing" class="block px-4 py-2  hover:bg-gray-700">Sharing</a>
+        <a href="{{ url_for('services') }}" class="block px-4 py-2  hover:bg-gray-700">Service</a>
+        <a href="{{ url_for('aboutus') }}" class="block px-4 py-2  hover:bg-gray-700">About Us</a>
+    </div>
+    
+
     <!--History-->
         <!-- Rekomendasi Produk Berdasarkan Histori -->
     <div class="mt-8 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-white to-blue-50 py-8">
@@ -605,7 +613,7 @@
 </div>
 
 <!-- Menampilkan negara user -->
-<p class="text-center text-2xl md:text-4xl font-bold text-gray-800">
+<p class="text-center text-2xl md:text-4xl font-bold text-black">
     Your country: <span class="text-white">{{ session_country }}</span>
 </p>
 
@@ -717,5 +725,14 @@
         max: 25,
         });
     </script>
+    <script>
+        const menuButton = document.getElementById('main-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+    
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden'); // Toggle class hidden buat nunjukin menu
+        });
+    </script>
+    
 </body>
 </html>
